@@ -7,7 +7,7 @@
 
 ## 🎯 What this manual is for
 
-This daywise courseware has the **what** — commands, labs, copy-paste blocks. This manual has the **why** and **how underneath it**, so when a trainee asks "but *why* does it work like that," you're not improvising. It's organized by topic, not by day, since a few of these ideas (permissions, PATH, systemd) get touched multiple times across different days.
+The daywise courseware has the **what** — commands, labs, copy-paste blocks. This manual has the **why** and **how underneath it**, so when a trainee asks "but *why* does it work like that," you're not improvising. It's organized by topic, not by day, since a few of these ideas (permissions, PATH, systemd) get touched multiple times across different days.
 
 Read this once end to end before Day 1, then dip back in per-topic the night before you teach it.
 
