@@ -418,42 +418,28 @@ C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoExit -Command "Set-
 
 --- 
 
-nano - open to edit 
+| | |
+| Command | Short definition                |
+| ------- | ------------------------------- |
+| `nano`  | open to edit                    |
+| `echo`  | create/write `>` or append `>>` |
+| `touch` | create if not existing          |
+| `cat`   | display file contents           |
+| `head`  | display first N lines           |
+| `tail`  | display last N lines            |
+| `more`  | view page by page               |
+| `less`  | view, scroll & search           |
+| | |
 
-echo - create (if not existing), write / update string > , append string >> 
-
-touch - create (if not existing), 
-
-cat - 
-
-head - 
-
-tail - 
-
-more - 
-
-less -
-
-
-nano - open to edit 
-
-echo - create (if not existing), write / update string > , append string >> 
-
-touch - create (if not existing), 
-
-cat - 
-
-head - 
-
-tail - 
-
-more - 
-
-less -
-
-	Regex 
-
-	^ * - d %d ~ a-z A-Z 0-9 
+| Command | Short definition               |
+| ------- | ------------------------------ |
+| `grep`  | search for matching text       |
+| `wc`    | count lines, words, characters |
+| `sort`  | sort lines                     |
+| `uniq`  | remove consecutive duplicates  |
+| `cut`   | extract columns/fields         |
+| `awk`   | process and extract text       |
+| `sed`   | search, replace & edit text    |
 
 
 
