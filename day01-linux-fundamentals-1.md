@@ -418,7 +418,6 @@ C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoExit -Command "Set-
 
 --- 
 
-| | |
 | Command | Short definition                |
 | ------- | ------------------------------- |
 | `nano`  | open to edit                    |
@@ -429,7 +428,7 @@ C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoExit -Command "Set-
 | `tail`  | display last N lines            |
 | `more`  | view page by page               |
 | `less`  | view, scroll & search           |
-| | |
+
 
 | Command | Short definition               |
 | ------- | ------------------------------ |
