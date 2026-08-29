@@ -428,7 +428,7 @@ C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoExit -Command "Set-
 | `tail`  | display last N lines            |
 | `more`  | view page by page               |
 | `less`  | view, scroll & search           |
-| `grep`  | search for matching text       |
+| `grep`  | search for matching text        |
 
 
 
