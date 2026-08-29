@@ -1,0 +1,184 @@
+2026-08-29 08:00:01 INFO  Application started
+2026-08-29 08:00:02 INFO  Loading application configuration
+2026-08-29 08:00:03 INFO  Database connection initialized
+2026-08-29 08:00:04 INFO  Database connection successful
+2026-08-29 08:00:05 INFO  HTTP server started on port 8080
+2026-08-29 08:01:10 INFO  User login successful user=alice
+2026-08-29 08:01:12 INFO  GET /api/users status=200
+2026-08-29 08:01:15 INFO  GET /api/products status=200
+2026-08-29 08:02:03 INFO  User login successful user=bob
+2026-08-29 08:02:05 INFO  GET /api/orders status=200
+2026-08-29 08:02:08 INFO  POST /api/orders status=201
+2026-08-29 08:03:11 INFO  Payment initiated order=1001
+2026-08-29 08:03:15 INFO  Payment completed order=1001
+2026-08-29 08:04:02 INFO  GET /api/products/101 status=200
+2026-08-29 08:04:12 INFO  User logout user=alice
+2026-08-29 08:05:01 INFO  Scheduled job started name=cleanup
+2026-08-29 08:05:05 INFO  Scheduled job completed name=cleanup
+2026-08-29 08:06:20 WARN  Slow response endpoint=/api/reports duration=2400ms
+2026-08-29 08:07:01 INFO  GET /api/reports status=200
+2026-08-29 08:08:17 INFO  User login successful user=charlie
+2026-08-29 08:08:22 INFO  GET /api/dashboard status=200
+2026-08-29 08:09:03 ERROR Database query failed table=orders error=timeout
+2026-08-29 08:09:05 INFO  Database connection retry attempt=1
+2026-08-29 08:09:07 INFO  Database connection successful
+2026-08-29 08:10:12 INFO  GET /api/orders status=200
+2026-08-29 08:11:45 WARN  Invalid request parameter user=bob parameter=page
+2026-08-29 08:12:01 INFO  GET /api/products status=200
+2026-08-29 08:12:22 INFO  POST /api/cart status=200
+2026-08-29 08:13:10 INFO  POST /api/orders status=201
+2026-08-29 08:13:15 INFO  Payment initiated order=1002
+2026-08-29 08:13:19 ERROR Payment failed order=1002 reason=insufficient_funds
+2026-08-29 08:13:21 INFO  Payment retry scheduled order=1002
+2026-08-29 08:14:02 INFO  User logout user=bob
+2026-08-29 08:15:00 INFO  Scheduled job started name=backup
+2026-08-29 08:15:32 INFO  Scheduled job completed name=backup
+2026-08-29 08:16:45 INFO  User login successful user=david
+2026-08-29 08:17:02 INFO  GET /api/profile status=200
+2026-08-29 08:17:33 INFO  PUT /api/profile status=200
+2026-08-29 08:18:11 WARN  Authentication failed user=unknown
+2026-08-29 08:18:15 WARN  Authentication failed user=unknown
+2026-08-29 08:18:19 WARN  Authentication failed user=unknown
+2026-08-29 08:18:25 ERROR Account temporarily locked user=unknown
+2026-08-29 08:19:01 INFO  GET /api/products status=200
+2026-08-29 08:20:10 INFO  GET /api/categories status=200
+2026-08-29 08:21:15 INFO  User login successful user=alice
+2026-08-29 08:22:03 INFO  GET /api/orders status=200
+2026-08-29 08:22:30 INFO  GET /api/orders/1001 status=200
+2026-08-29 08:23:44 WARN  Cache miss key=product:101
+2026-08-29 08:23:46 INFO  Cache populated key=product:101
+2026-08-29 08:24:01 INFO  GET /api/products/101 status=200
+2026-08-29 08:25:17 ERROR File upload failed filename=invoice.pdf
+2026-08-29 08:26:05 INFO  File upload successful filename=profile.jpg
+2026-08-29 08:27:10 INFO  GET /api/files status=200
+2026-08-29 08:28:32 INFO  User logout user=david
+2026-08-29 08:29:00 INFO  Scheduled job started name=cleanup
+2026-08-29 08:29:04 INFO  Scheduled job completed name=cleanup
+2026-08-29 08:30:11 INFO  User login successful user=emma
+2026-08-29 08:30:20 INFO  GET /api/dashboard status=200
+2026-08-29 08:31:15 INFO  GET /api/products status=200
+2026-08-29 08:32:02 WARN  Slow response endpoint=/api/products duration=1800ms
+2026-08-29 08:32:45 INFO  GET /api/products status=200
+2026-08-29 08:33:11 INFO  POST /api/cart status=200
+2026-08-29 08:34:09 INFO  POST /api/orders status=201
+2026-08-29 08:34:15 INFO  Payment initiated order=1003
+2026-08-29 08:34:20 INFO  Payment completed order=1003
+2026-08-29 08:35:01 INFO  GET /api/orders/1003 status=200
+2026-08-29 08:36:17 INFO  User logout user=emma
+2026-08-29 08:37:22 INFO  User login successful user=frank
+2026-08-29 08:38:01 INFO  GET /api/profile status=200
+2026-08-29 08:39:13 WARN  Deprecated API endpoint used endpoint=/api/v1/users
+2026-08-29 08:40:02 INFO  GET /api/users status=200
+2026-08-29 08:41:18 ERROR Database query failed table=products error=connection_reset
+2026-08-29 08:41:20 INFO  Database connection retry attempt=1
+2026-08-29 08:41:22 INFO  Database connection retry attempt=2
+2026-08-29 08:41:25 INFO  Database connection successful
+2026-08-29 08:42:03 INFO  GET /api/products status=200
+2026-08-29 08:43:11 INFO  GET /api/categories status=200
+2026-08-29 08:44:22 INFO  POST /api/cart status=200
+2026-08-29 08:45:31 WARN  Request rate limit approaching user=frank
+2026-08-29 08:46:05 INFO  GET /api/orders status=200
+2026-08-29 08:47:12 INFO  User logout user=frank
+2026-08-29 08:48:00 INFO  Scheduled job started name=report
+2026-08-29 08:48:42 INFO  Scheduled job completed name=report
+2026-08-29 08:49:11 INFO  User login successful user=alice
+2026-08-29 08:50:03 INFO  GET /api/dashboard status=200
+2026-08-29 08:51:20 ERROR Unauthorized API request path=/api/admin/users
+2026-08-29 08:52:01 INFO  GET /api/products status=200
+2026-08-29 08:53:14 INFO  POST /api/cart status=200
+2026-08-29 08:54:08 INFO  POST /api/orders status=201
+2026-08-29 08:54:15 INFO  Payment initiated order=1004
+2026-08-29 08:54:19 ERROR Payment failed order=1004 reason=bank_unavailable
+2026-08-29 08:55:02 INFO  Payment retry scheduled order=1004
+2026-08-29 08:56:12 INFO  GET /api/orders/1004 status=200
+2026-08-29 08:57:21 WARN  External service response slow service=shipping duration=3200ms
+2026-08-29 08:58:10 INFO  External service response successful service=shipping
+2026-08-29 08:59:01 INFO  User logout user=alice
+2026-08-29 09:00:00 INFO  Scheduled job started name=backup
+2026-08-29 09:00:30 INFO  Scheduled job completed name=backup
+2026-08-29 09:01:15 INFO  User login successful user=bob
+2026-08-29 09:02:03 INFO  GET /api/products status=200
+2026-08-29 09:03:22 INFO  GET /api/orders status=200
+2026-08-29 09:04:17 WARN  Invalid authentication token user=bob
+2026-08-29 09:05:11 INFO  Authentication successful user=bob
+2026-08-29 09:06:32 INFO  GET /api/profile status=200
+2026-08-29 09:07:45 ERROR Unable to send email recipient=bob@example.com
+2026-08-29 09:08:01 INFO  Email retry scheduled recipient=bob@example.com
+2026-08-29 09:09:12 INFO  Email sent successfully recipient=bob@example.com
+2026-08-29 09:10:00 INFO  Scheduled job started name=cleanup
+2026-08-29 09:10:04 INFO  Scheduled job completed name=cleanup
+2026-08-29 09:11:22 INFO  User logout user=bob
+2026-08-29 09:12:01 INFO  User login successful user=charlie
+2026-08-29 09:13:15 INFO  GET /api/dashboard status=200
+2026-08-29 09:14:20 INFO  GET /api/products status=200
+2026-08-29 09:15:32 WARN  Slow response endpoint=/api/dashboard duration=2100ms
+2026-08-29 09:16:01 INFO  GET /api/dashboard status=200
+2026-08-29 09:17:10 INFO  POST /api/cart status=200
+2026-08-29 09:18:22 INFO  POST /api/orders status=201
+2026-08-29 09:19:15 INFO  Payment initiated order=1005
+2026-08-29 09:19:20 INFO  Payment completed order=1005
+2026-08-29 09:20:01 INFO  GET /api/orders/1005 status=200
+2026-08-29 09:21:12 INFO  User logout user=charlie
+2026-08-29 09:22:00 INFO  Scheduled job started name=backup
+2026-08-29 09:22:45 ERROR Backup failed reason=disk_full
+2026-08-29 09:23:01 WARN  Disk usage above threshold usage=92%
+2026-08-29 09:24:10 INFO  Cleanup started reason=disk_space
+2026-08-29 09:25:32 INFO  Cleanup completed freed=4GB
+2026-08-29 09:26:01 INFO  Backup retry started
+2026-08-29 09:27:20 INFO  Backup completed successfully
+2026-08-29 09:28:11 INFO  GET /api/health status=200
+2026-08-29 09:29:22 INFO  GET /api/metrics status=200
+2026-08-29 09:30:00 INFO  Scheduled job started name=report
+2026-08-29 09:30:40 INFO  Scheduled job completed name=report
+2026-08-29 09:31:12 INFO  User login successful user=david
+2026-08-29 09:32:05 INFO  GET /api/products status=200
+2026-08-29 09:33:16 ERROR Invalid product id id=9999
+2026-08-29 09:34:21 INFO  GET /api/products/101 status=200
+2026-08-29 09:35:12 WARN  Cache miss key=product:102
+2026-08-29 09:36:01 INFO  Cache populated key=product:102
+2026-08-29 09:37:15 INFO  GET /api/products/102 status=200
+2026-08-29 09:38:22 INFO  User logout user=david
+2026-08-29 09:39:00 INFO  Scheduled job started name=cleanup
+2026-08-29 09:39:05 INFO  Scheduled job completed name=cleanup
+2026-08-29 09:40:11 INFO  Application health check status=healthy
+2026-08-29 09:41:22 INFO  Database health check status=healthy
+2026-08-29 09:42:31 INFO  Redis health check status=healthy
+2026-08-29 09:43:10 WARN  Memory usage above threshold usage=82%
+2026-08-29 09:44:15 INFO  Garbage collection started
+2026-08-29 09:44:18 INFO  Garbage collection completed
+2026-08-29 09:45:01 INFO  Memory usage normalized usage=65%
+2026-08-29 09:46:22 INFO  GET /api/health status=200
+2026-08-29 09:47:33 INFO  User login successful user=emma
+2026-08-29 09:48:01 INFO  GET /api/orders status=200
+2026-08-29 09:49:15 INFO  POST /api/orders status=201
+2026-08-29 09:50:20 INFO  Payment initiated order=1006
+2026-08-29 09:50:25 INFO  Payment completed order=1006
+2026-08-29 09:51:10 INFO  GET /api/orders/1006 status=200
+2026-08-29 09:52:01 INFO  User logout user=emma
+2026-08-29 09:53:00 INFO  Scheduled job started name=backup
+2026-08-29 09:53:40 INFO  Scheduled job completed name=backup
+2026-08-29 09:54:11 WARN  High number of requests endpoint=/api/products requests=950
+2026-08-29 09:55:02 INFO  Request rate returned to normal
+2026-08-29 09:56:21 ERROR External service unavailable service=shipping
+2026-08-29 09:57:01 WARN  Retrying external service service=shipping attempt=1
+2026-08-29 09:58:12 INFO  External service available service=shipping
+2026-08-29 09:59:30 INFO  GET /api/shipping/status status=200
+2026-08-29 10:00:00 INFO  Scheduled job started name=report
+2026-08-29 10:00:50 INFO  Scheduled job completed name=report
+2026-08-29 10:01:12 INFO  Application metrics collected
+2026-08-29 10:02:22 INFO  Application metrics exported
+2026-08-29 10:03:15 INFO  GET /api/health status=200
+2026-08-29 10:04:01 INFO  Database connection pool active=8 idle=12
+2026-08-29 10:05:10 WARN  Database connection pool usage high active=18 idle=2
+2026-08-29 10:06:22 INFO  Database connection pool normalized active=10 idle=10
+2026-08-29 10:07:15 INFO  GET /api/users status=200
+2026-08-29 10:08:30 INFO  User login successful user=frank
+2026-08-29 10:09:11 INFO  GET /api/dashboard status=200
+2026-08-29 10:10:01 ERROR Unexpected application exception module=orders
+2026-08-29 10:10:05 INFO  Exception handled successfully
+2026-08-29 10:11:12 INFO  GET /api/orders status=200
+2026-08-29 10:12:21 INFO  User logout user=frank
+2026-08-29 10:13:00 INFO  Scheduled job started name=cleanup
+2026-08-29 10:13:05 INFO  Scheduled job completed name=cleanup
+2026-08-29 10:14:22 INFO  Application running normally
+2026-08-29 10:15:00 INFO  End of sample log period
