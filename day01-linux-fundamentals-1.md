@@ -428,18 +428,7 @@ C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoExit -Command "Set-
 | `tail`  | display last N lines            |
 | `more`  | view page by page               |
 | `less`  | view, scroll & search           |
-
-
-| Command | Short definition               |
-| ------- | ------------------------------ |
 | `grep`  | search for matching text       |
-| `wc`    | count lines, words, characters |
-| `sort`  | sort lines                     |
-| `uniq`  | remove consecutive duplicates  |
-| `cut`   | extract columns/fields         |
-| `awk`   | process and extract text       |
-| `sed`   | search, replace & edit text    |
-
 
 
 
