@@ -15,7 +15,7 @@ Use this as a companion to `day00-program-overview.md` and the Day 1–4 coursew
 
 ## 1. WSL2 and the Windows/Linux boundary
 
-*→ Referenced in: `day01.md`, Hour 0*
+*→ Referenced in: `day01-linux-fundamentals-1.md`, Hour 0*
 
 ### What WSL2 actually is
 
@@ -50,7 +50,7 @@ systemd=true
 
 ## 2. The Linux filesystem model & FHS
 
-*→ Referenced in: `day01.md`, Concepts*
+*→ Referenced in: `day01-linux-fundamentals-1.md`, Concepts*
 
 ### Why "one tree," not drive letters
 
@@ -72,7 +72,7 @@ The trick that helps this click for beginners: an absolute path is a *complete a
 
 ## 3. Permissions, ownership & `umask`
 
-*→ Referenced in: `day01.md`, Concepts + Lab*
+*→ Referenced in: `day01-linux-fundamentals-1.md`, Concepts + Lab*
 
 ### Why the rwx/owner-group-other model exists
 
@@ -86,7 +86,7 @@ This model dates to early multi-user Unix systems where many people shared one p
 - `5` = 4+0+1 = read+execute, no write
 - `4` = 4+0+0 = read only
 
-Once a participant sees it as bit-summing rather than a lookup table to memorize, they can derive *any* permission number on the fly instead of guessing. Worth actually writing `111 = 7`, `101 = 5` in binary on the whiteboard the first time — it sticks far better than "755 means this."
+Once you see it as bit-summing rather than a lookup table to memorize, you can derive *any* permission number on the fly instead of guessing. Worth actually writing out `111 = 7`, `101 = 5` in binary the first time — it sticks far better than "755 means this."
 
 ### Why `umask` defaults to `022` and what it protects against
 
@@ -98,7 +98,7 @@ A fresh file, if nothing intervened, would default to `666` (rw for everyone) an
 
 ## 4. Users, groups & `sudo`
 
-*→ Referenced in: `day02.md`, Concepts*
+*→ Referenced in: `day02-linux-fundamentals-2.md`, Concepts*
 
 ### Why UID 0 (root) is special, not just "an admin account"
 
@@ -123,11 +123,11 @@ Historically they were — that's why the field is still there, just replaced wi
 *→ Courseware reference: `day02-linux-fundamentals-2.md`, Concepts + Guided hands-on + Lab*
 *→ Syllabus alignment: Day 2 — process management, jobs, `bg`/`fg`, `kill`, systemd and `systemctl`*
 
-The courseware contains the commands and exercises; this section focuses on the mental model a trainer should reinforce.
+The courseware has the commands and exercises; this section focuses on the mental model worth holding onto.
 
 ### What a process actually is
 
-A process is a running instance of a program, with a unique PID, a parent (PPID — nearly everything traces back to PID 1), and its own memory space. `ps aux` is a snapshot; `top` is the same information, live and auto-refreshing. You may sometimes expect `top` to show *only* their own programs — worth clarifying it shows the whole machine, all users, because on WSL2 that's usually just them anyway, but the mental model matters for later (e.g., a real multi-user production server).
+A process is a running instance of a program, with a unique PID, a parent (PPID — nearly everything traces back to PID 1), and its own memory space. `ps aux` is a snapshot; `top` is the same information, live and auto-refreshing. You might expect `top` to show *only* your own programs — worth knowing it actually shows the whole machine, all users, because on WSL2 that's usually just you anyway, but the mental model matters for later (e.g., a real multi-user production server).
 
 ### Foreground, background and job control
 
@@ -148,7 +148,7 @@ Keep in mind: this distinction matters later when diagnosing services. A shell-l
 - **`start`** — launch it *right now*, this session.
 - **`enable`** — create a symlink so it launches automatically on every future systemd boot.
 
-They're independent. You can `start` something without `enable`-ing it (runs now, won't survive a restart) or `enable` without `start` (will launch next boot, isn't running yet). This is exactly why we discussed *not* enabling Grafana/Vertica earlier — the participants run `start` manually each morning as a deliberate choice to keep reinforcing the mechanic, rather than making it invisible.
+They're independent. You can `start` something without `enable`-ing it (runs now, won't survive a restart) or `enable` without `start` (will launch next boot, isn't running yet). This is exactly why the course has you run `start` manually each morning rather than `enable`-ing it — a deliberate choice to keep reinforcing the mechanic, rather than making it invisible.
 
 Mechanically, `enable` works by creating a symlink inside `/etc/systemd/system/<target>.wants/` pointing back at the actual unit file (usually in `/usr/lib/systemd/system/` or `/etc/systemd/system/`). `systemctl disable` just removes that symlink — nothing about the service itself changes, only whether it auto-starts.
 
@@ -183,7 +183,7 @@ A shell variable is normally a **string value associated with the current shell*
 
 This is also why `source` is fundamentally different from executing a script: sourcing runs the file in the current shell, so assignments and `cd` can change the caller's environment.
 
-Script arguments (`$1`, `$2`, `$@`, `$#`) are another source of confusion. They are supplied by the caller and are not the same thing as environment variables. Trainers should make that distinction explicit.
+Script arguments (`$1`, `$2`, `$@`, `$#`) are another source of confusion. They are supplied by the caller and are not the same thing as environment variables — worth keeping that distinction explicit in your head.
 
 *→ See `day03-linux-fundamentals-3.md`, “Variables”, “Reading user input”, and “Functions”.*
 
@@ -220,7 +220,7 @@ Unquoted variables undergo **word splitting** — bash splits on whitespace and 
 
 ## 7. Package management internals
 
-*→ Referenced in: `day03.md`, Concepts*
+*→ Referenced in: `day03-linux-fundamentals-3.md`, Concepts*
 
 ### `dpkg` vs `apt` — the actual relationship
 
@@ -245,9 +245,9 @@ When you type a bare command name (`ls`, `cowsay`), bash doesn't search the enti
 *→ Courseware reference: `day04-linux-networking.md`, Concepts + Guided hands-on + Lab*
 *→ Syllabus alignment: Day 4 — IP addressing, ports, DNS, `ping`, `curl`, `ss/netstat`, `ufw`, logs and WSL2 environment verification*
 
-The Day 4 courseware provides the practical commands. The trainer's job is to connect those commands into one troubleshooting model.
+The Day 4 courseware has the practical commands. This section connects them into one troubleshooting model.
 
-A useful way to teach Day 4 is as a chain:
+A useful way to think about Day 4's tools is as a chain:
 
 `name → DNS → IP → port → service/process → response`
 
@@ -262,7 +262,7 @@ A useful way to teach Day 4 is as a chain:
 
 ### A simple networking troubleshooting model
 
-When a participant says “the application isn't reachable,” avoid jumping straight to firewall commands. Walk down the stack:
+When something "isn't reachable," resist the urge to jump straight to firewall commands. Walk down the stack instead:
 
 1. Does the name resolve?
 2. Is the target IP the one expected?
@@ -294,7 +294,7 @@ The important concept is that **WSL2 is both a Linux environment and a Windows-i
 
 ### Why verify twice?
 
-Environment setup is not the same as environment readiness. A participant can have Ubuntu installed but still have the wrong WSL version, systemd disabled, or GUI integration unavailable. The Day 4 health check deliberately verifies the complete chain before the database module begins.
+Environment setup is not the same as environment readiness. You can have Ubuntu installed but still have the wrong WSL version, systemd disabled, or GUI integration unavailable. The Day 4 health check deliberately verifies the complete chain before the database module begins.
 
 The verification therefore has three layers:
 

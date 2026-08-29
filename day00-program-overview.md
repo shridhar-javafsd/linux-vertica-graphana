@@ -21,7 +21,15 @@
 | `day09-grafana-dashboarding.md` | 9 | Grafana — Dashboarding |
 | `day10-capstone.md` | 10 | Capstone Project |
 
-Keep all 11 files in one folder. Each one is self-contained — recap, concepts, hands-on, lab, and a copy-paste command reference — so you can jump back to any day later without hunting through slides.
+**Alongside the daily courseware, three companion manuals go deeper on the *why* behind each block:**
+
+| File | Covers |
+|---|---|
+| `01-participant-manual-linux.md` | Days 1–4 — the reasoning and mechanics behind the Linux commands |
+| `02-participant-manual-vertica.md` | Days 5–7 — the reasoning behind Vertica's architecture, install, and SQL |
+| `03-participant-manual-grafana.md` | Days 8–9 — the reasoning behind Grafana's data model and dashboarding |
+
+Keep all 14 files in one folder. Each `day01`–`day10` file is self-contained — recap, concepts, hands-on, lab, and a copy-paste command reference — so you can jump back to any day later without hunting through slides. The three manuals are optional-but-recommended companion reading, best read once after finishing the relevant block, then used as a reference when you want the deeper "why" behind something.
 
 ---
 
@@ -118,7 +126,7 @@ Day 1 has one extra section right up front: **environment setup**. You'll walk i
 
 - All software used is free/open-source — no licensing budget required from you or Adaps.
 - Windows 11 (x86_64) laptops are mandatory for every participant and the trainer. Vertica has no native ARM64 build, so Apple Silicon Macs won't work for this program.
-- Duration can flex to 12 working days if extra depth is needed (e.g., deeper Vertica performance tuning or a second capstone), without significantly affecting the go-live buffer.
+- Duration can flex to 12 working days if extra depth is needed (e.g., deeper Vertica performance tuning or a second capstone).
 
 ---
 
