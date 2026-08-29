@@ -415,3 +415,47 @@ C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoExit -Command "Set-
 ```bash 
 C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoExit -Command "Set-Location 'C:\lalit'" 
 ```
+
+--- 
+
+nano - open to edit 
+
+echo - create (if not existing), write / update string > , append string >> 
+
+touch - create (if not existing), 
+
+cat - 
+
+head - 
+
+tail - 
+
+more - 
+
+less -
+
+
+nano - open to edit 
+
+echo - create (if not existing), write / update string > , append string >> 
+
+touch - create (if not existing), 
+
+cat - 
+
+head - 
+
+tail - 
+
+more - 
+
+less -
+
+	Regex 
+
+	^ * - d %d ~ a-z A-Z 0-9 
+
+
+
+
+

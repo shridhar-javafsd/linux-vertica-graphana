@@ -405,3 +405,15 @@ umask
 ## 👀 Tomorrow: Day 2 — Linux Fundamentals II
 
 You'll create actual users and groups, get comfortable with `sudo` and the sudoers concept, then move into process management (`ps`, `top`, `kill`) and your first real look at `systemd` — the exact service-management skill you'll lean on for both Vertica and Grafana later this week.
+
+---
+
+Additional Commands - 
+
+```bash 
+C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoExit -Command "Set-Location 'D:\linux'" 
+```
+
+```bash 
+C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoExit -Command "Set-Location 'C:\lalit'" 
+```
