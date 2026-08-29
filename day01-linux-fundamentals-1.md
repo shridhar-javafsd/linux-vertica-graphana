@@ -411,3 +411,7 @@ Additional Commands -
 ```bash 
 C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoExit -Command "Set-Location 'D:\linux'" 
 ```
+
+```bash 
+C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoExit -Command "Set-Location 'C:\lalit'" 
+```
