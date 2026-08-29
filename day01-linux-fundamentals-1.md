@@ -88,7 +88,11 @@ Add (or append) this block:
 systemd=true
 ```
 
-Save and exit: `Ctrl+O`, `Enter`, `Ctrl+X`, `Exit` and restart WSL2.
+Save and exit: `Ctrl+O`, `Enter`, `Ctrl+X`, you will be back to linux prompt. 
+
+Type `Exit` and you will come back to PS prompt. 
+
+Type `wsl` restart WSL2.
 
 **🪟 Run in PowerShell**:
 
