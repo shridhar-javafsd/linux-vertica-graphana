@@ -475,3 +475,9 @@ vaman@VAMUX:/mnt/d/linux/basics$
 ⚠️ Note how `-p`, `-a`, `-l`, `-r` mean *different things* depending on which command they're attached to — flags are command-specific, not universal. Always check a command's `man` page or `--help` if unsure (e.g. `man chmod`, `ls --help`).
 
 --- 
+
+To view linux's directories, type in Windows explorer address bar: 
+
+```bash
+\\wsl$\Ubuntu\home\vaman
+```
