@@ -88,11 +88,7 @@ Add (or append) this block:
 systemd=true
 ```
 
-Save and exit: `Ctrl+O`, `Enter`, `Ctrl+X`, you will be back to linux prompt. 
-
-Type `Exit` and you will come back to PS prompt. 
-
-Type `wsl` restart WSL2.
+Save and exit: `Ctrl+O`, `Enter`, `Ctrl+X`, `Exit` and restart WSL2.
 
 **🪟 Run in PowerShell**:
 
@@ -212,7 +208,9 @@ mkdir -p a/b/c           # make nested dirs in one shot, no complaints if they e
 touch notes.txt          # create an empty file (or update its timestamp)
 cp source.txt dest.txt   # copy
 cp -r folder1 folder2    # copy recursively (needed for directories)
-mv old.txt new.txt       # move OR rename — same command does both
+mv old.txt new.txt              # rename — same location, new name
+mv notes.txt ~/practice-lab/     # move — same name, new location (target ending in / is a directory)
+mv draft.txt ~/practice-lab/final.txt   # move AND rename in one shot — new location, new name
 rm file.txt              # delete a file — no recycle bin, no undo
 rm -r folder             # delete a directory and everything in it
 rm -i file.txt           # ask before deleting — good habit early on
@@ -229,6 +227,8 @@ ls report?.csv    # report1.csv, reportA.csv — exactly one character in place 
 rm draft_*        # delete everything starting with "draft_"
 ```
 
+> ⚠️ **Wildcards + `rm` only delete files, not directories — even if the pattern matches a directory name.** If `draft_*` happens to match both files and a directory (say, a folder called `draft_backup`), plain `rm` deletes the files fine but errors on the directory with `cannot remove 'draft_backup': Is a directory` — it won't silently skip it, and it won't delete it either. You'd need `rm -r draft_*` to sweep up both files and directories matching the pattern. Worth checking what a wildcard actually matches before running `rm` on it, especially with `-r` in the mix.
+
 ### Basic redirection — your first taste of piping
 
 ```bash
@@ -236,6 +236,8 @@ echo "hello" > file.txt     # write (overwrite) into a file
 echo "again" >> file.txt    # append to a file
 ls -l | grep ".txt"          # pipe: send ls's output INTO grep as input
 ```
+
+`grep` searches its input for lines matching a pattern and prints only those — so `ls -l | grep ".txt"` lists everything in the current directory, then keeps only the lines containing ".txt". You'll use `grep` constantly from here on; this is its simplest possible form.
 
 `>` overwrites. `>>` adds on. `|` chains commands together — the output of the left becomes the input of the right. You'll use `|` constantly from here on.
 
@@ -353,7 +355,8 @@ cd ~/practice-lab
 
 5. Verify all four with `ls -l` at each level, and confirm you can explain **out loud** what each permission number means before moving on. If you can't explain it, you don't own it yet — ask.
 
-6. **Bonus round:** create a file called `draft_v1.txt`, `draft_v2.txt`, and `draft_final.txt` in `shared/`, then delete only the two `draft_*` files using a single wildcard command (not three separate `rm` commands).
+6. **Bonus round:** create `draft_v1.txt`, `draft_v2.txt`, and `draft_final.txt` in `shared/`, then delete **only** `draft_v1.txt` and `draft_v2.txt` — keep `draft_final.txt` — using a single wildcard command (not separate `rm` commands for each).
+   - Careful: `draft_*` matches all three (they all start with `draft_`) — that would wipe out `draft_final.txt` too. You need a pattern specific enough to catch only the two you want, and this is exactly the kind of mistake worth making once in a sandbox rather than on something real.
 
 ---
 
@@ -377,13 +380,13 @@ tree / tree -L 2
 mkdir <name> / mkdir -p a/b/c
 touch <file>
 cp <src> <dest> / cp -r <src> <dest>
-mv <old> <new>
-rm <file> / rm -r <dir> / rm -i <file>
+mv <old> <new>              # rename or move (or both at once)
+rm <file> / rm -r <dir> / rm -i <file>   # rm alone = files only; -r needed for directories
 rmdir <empty-dir>
 
 # --- Wildcards ---
 ls *.txt
-rm draft_*
+rm draft_v*        # only files matching draft_v* — rm alone skips directories, errors if one matches
 
 # --- Redirection ---
 echo "text" > file.txt     # overwrite
@@ -403,10 +406,21 @@ umask
 
 You'll create actual users and groups, get comfortable with `sudo` and the sudoers concept, then move into process management (`ps`, `top`, `kill`) and your first real look at `systemd` — the exact service-management skill you'll lean on for both Vertica and Grafana later this week.
 
-
 ---
 
 Additional Commands - 
+
+```bash 
+C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoExit -Command "Set-Location 'D:\linux'" 
+```
+
+```bash 
+C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoExit -Command "Set-Location 'C:\lalit'" 
+```
+
+---
+
+## Additional Commands - 
 
 ```bash 
 C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoExit -Command "Set-Location 'D:\linux'" 
@@ -430,6 +444,4 @@ C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoExit -Command "Set-
 | `less`  | view, scroll & search           |
 | `grep`  | search for matching text        |
 
-
-
-
+--- 
