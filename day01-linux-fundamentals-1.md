@@ -457,9 +457,6 @@ vaman@VAMUX:/mnt/d/linux/basics$
 
 --- 
 
-
----
-
 ## Quick reference: flag meanings recap
 
 | Flag | Seen on | Meaning |

@@ -21,7 +21,7 @@ Use this as a companion to `day00-program-overview.md` and the Day 1–4 coursew
 
 WSL2 is **not** a virtual machine in the traditional sense (though it uses a lightweight one under the hood via Hyper-V). Microsoft runs a real Linux kernel inside a minimal, purpose-built VM, and then makes that VM feel almost invisible — shared filesystem access via `\\wsl.localhost\`, automatic `localhost` port forwarding into Windows, near-native performance. WSL1, the older approach, tried to translate Linux syscalls into Windows syscalls directly — no real kernel, which meant a lot of things (especially anything low-level, like Docker or full systemd) simply didn't work. That's why we install WSL2, not WSL1, and why the Step 0 check in Day 1 specifically watches for `VERSION 2`.
 
-**Why this matters:** if you are coming from a Windows-only background, it is easy to assume WSL2 is just "a Linux window," like a fancy terminal emulator. It's genuinely a different kernel, different filesystem, different everything — just glued to Windows very smoothly. Worth saying explicitly in class, because misunderstanding this causes real confusion later (e.g., "why can't I just double-click this file in Windows Explorer" — they usually can, via the `\\wsl.localhost\` path, but it's not the same filesystem).
+**Why this matters:** if you are coming from a Windows-only background, it is easy to assume WSL2 is just "a Linux window," like a fancy terminal emulator. It's genuinely a different kernel, different filesystem, different everything — just glued to Windows very smoothly. Worth understanding explicitly, because misunderstanding this causes real confusion later (e.g., "why can't I just double-click this file in Windows Explorer" — you usually can, via the `\\wsl.localhost\` path, but it's not the same filesystem).
 
 ### Why `[boot] systemd=true` is needed at all
 
@@ -62,7 +62,7 @@ This is why WSL2 itself is a good live example: your Windows `D:\Projects` folde
 
 The Filesystem Hierarchy Standard isn't a technical requirement enforced by the kernel — it's a **convention**, agreed upon across distros, so that software (and humans) can predict where things live without guessing. `/etc` for config, `/var` for changing data, `/usr` for installed software — none of this is magic, it's just decades of accumulated agreement. That's *why* Vertica installs into `/opt` (the FHS-designated spot for third-party, self-contained software packages) rather than scattering itself across `/usr`.
 
-**The distinction worth remembering:** `/etc` = static configuration (rarely changes on its own), `/var` = dynamic/runtime data (logs, caches — changes constantly). This distinction becomes concretely useful on Day 4 when they start reading logs via `journalctl`, and again whenever they need to find Vertica's or Grafana's config files later.
+**The distinction worth remembering:** `/etc` = static configuration (rarely changes on its own), `/var` = dynamic/runtime data (logs, caches — changes constantly). This distinction becomes concretely useful on Day 4 when you start reading logs via `journalctl`, and again whenever you need to find Vertica's or Grafana's config files later.
 
 ### Absolute vs relative paths — the actual mental model
 
