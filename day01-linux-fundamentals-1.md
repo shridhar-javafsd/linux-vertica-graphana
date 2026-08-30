@@ -424,6 +424,8 @@ You'll create actual users and groups, get comfortable with `sudo` and the sudoe
 
 --- 
 
+## linux output 
+
 ```console
 vaman@VAMUX:/mnt/d/linux/basics$ ls -l
 total 20
@@ -436,4 +438,22 @@ drwxrwxrwx 1 vaman vaman   512 Aug 29 09:46 dir3
 -rwxrwxrwx 1 vaman vaman  5661 Aug 29 10:32 users.json
 vaman@VAMUX:/mnt/d/linux/basics$
 ```
+
+## explanation 
+
+### Your `ls -l` listing in a friendlier table
+
+| Type | Permissions | Owner | Group | Size | Modified | Name |
+|---|---|---|---|---:|---|---|
+| File | `rwxrwxrwx` | `vaman` | `vaman` | 10,921 B | Aug 29 11:21 | `app.log` |
+| Directory | `rwxrwxrwx` | `vaman` | `vaman` | 512 B* | Aug 29 09:43 | `dir2` |
+| Directory | `rwxrwxrwx` | `vaman` | `vaman` | 512 B* | Aug 29 09:46 | `dir3` |
+| File | `rwxrwxrwx` | `vaman` | `vaman` | 0 B | Aug 29 09:35 | `dir4` |
+| File | `rwxrwxrwx` | `vaman` | `vaman` | 13 B | Aug 29 10:28 | `hello.txt` |
+| File | `rwxrwxrwx` | `vaman` | `vaman` | 510 B | Aug 29 10:30 | `user1.json` |
+| File | `rwxrwxrwx` | `vaman` | `vaman` | 5,661 B | Aug 29 10:32 | `users.json` |
+
+> **Note:** The `512 B` shown for a directory is the size of the directory's filesystem entry/metadata. It is **not** the combined size of the files inside that directory.
+
+--- 
 
