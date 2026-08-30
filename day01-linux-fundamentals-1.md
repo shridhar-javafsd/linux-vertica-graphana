@@ -457,3 +457,24 @@ vaman@VAMUX:/mnt/d/linux/basics$
 
 --- 
 
+
+---
+
+## Quick reference: flag meanings recap
+
+| Flag | Seen on | Meaning |
+|---|---|---|
+| `-l` | `wsl`, `ls` | verbose / long listing (context-dependent) |
+| `-v` | `wsl` | verbose |
+| `-d` | `wsl` | specify distro |
+| `--unregister`, `--install`, `--shutdown`, `--set-version` | `wsl` | long-form action flags |
+| `-y` | `apt` | auto-confirm prompts |
+| `-p` | `ps`, `mkdir` | filter by PID (`ps`) / create parent dirs (`mkdir`) — same letter, different meaning per command |
+| `-a` | `ls`, `lsb_release` | show hidden files (`ls`) / show all info (`lsb_release`) |
+| `-L` | `tree` | limit depth |
+| `-r` | `cp`, `rm` | recursive |
+| `-i` | `rm` | interactive/confirm |
+
+⚠️ Note how `-p`, `-a`, `-l`, `-r` mean *different things* depending on which command they're attached to — flags are command-specific, not universal. Always check a command's `man` page or `--help` if unsure (e.g. `man chmod`, `ls --help`).
+
+--- 
