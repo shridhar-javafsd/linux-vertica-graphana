@@ -423,3 +423,17 @@ You'll create actual users and groups, get comfortable with `sudo` and the sudoe
 | `grep`  | search for matching text        |
 
 --- 
+
+```console
+vaman@VAMUX:/mnt/d/linux/basics$ ls -l
+total 20
+-rwxrwxrwx 1 vaman vaman 10921 Aug 29 11:21 app.log
+drwxrwxrwx 1 vaman vaman   512 Aug 29 09:43 dir2
+drwxrwxrwx 1 vaman vaman   512 Aug 29 09:46 dir3
+-rwxrwxrwx 1 vaman vaman     0 Aug 29 09:35 dir4
+-rwxrwxrwx 1 vaman vaman    13 Aug 29 10:28 hello.txt
+-rwxrwxrwx 1 vaman vaman   510 Aug 29 10:30 user1.json
+-rwxrwxrwx 1 vaman vaman  5661 Aug 29 10:32 users.json
+vaman@VAMUX:/mnt/d/linux/basics$
+```
+
