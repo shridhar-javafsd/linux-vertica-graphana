@@ -341,3 +341,18 @@ source ~/.bashrc
 ## 👀 Tomorrow: Day 4 — Linux Networking & Environment Deep-Dive
 
 Networking basics (`ping`, `curl`, `ss`), a firewall intro with `ufw`, log inspection via `journalctl`, and a full verification pass on your WSL2 environment — including WSLg (GUI app support) — to make sure everything's rock-solid before Vertica shows up on Day 5.
+
+
+--- 
+
+## Training Notes - 
+
+shell scripting 
+
+script.sh 
+
+ps 
+ls -l 
+pwd 
+
+
