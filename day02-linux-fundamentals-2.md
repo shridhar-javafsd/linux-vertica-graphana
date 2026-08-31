@@ -236,3 +236,38 @@ sudo systemctl disable <service>
 ## 👀 Tomorrow: Day 3 — Linux Fundamentals III
 
 Shell scripting: variables, `if`/`else`, `for`/`while` loops, and writing your first real `.sh` scripts to automate repetitive tasks. Afternoon shifts to package management — `apt`/`dpkg`, repositories, and environment variables/`PATH` — the exact skills behind every install you've done so far, now explained properly instead of just copy-pasted.
+
+--- 
+
+## Training Notes - 
+
+sudo adduser sonu
+
+sudo deluser sonu
+
+useradd deluser userdel
+
+--- 
+
+Caution! 
+
+### Don't do this !
+
+sudo usermod -G devteam sonu # added to this broup but removed fro the other groups 
+
+### Do this 
+
+sudo usermod -aG hrteam sonu # adde to this group 
+
+
+---
+
+getent groups 
+
+--- 
+
+sudo useradd -m -s /bin/bash demo1
+
+sudo useradd demo2 
+
+
