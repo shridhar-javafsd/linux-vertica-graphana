@@ -355,4 +355,12 @@ ps
 ls -l 
 pwd 
 
+copy - 
 
+bash```
+cp /mnt/d/Projects/adaps/linux-vertica-graphana-manual/linux-stuff/acme_it_admin.sh .
+```
+
+bash```
+cp /mnt/d/Projects/adaps/linux-vertica-graphana-manual/linux-stuff/acme_it_admin.sh /home/vaman/scripts/acme-lab/ 
+```
