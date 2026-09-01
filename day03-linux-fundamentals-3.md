@@ -424,3 +424,22 @@ echo "${DEPT_MANAGER[engineering]}"     # Arjun Mehta
 for dept in "${!DEPT_MANAGER[@]}"; do   # ! gives you the KEYS
     echo "$dept -> ${DEPT_MANAGER[$dept]}"
 done
+
+
+--- 
+
+Core java - 
+Adv java - 
+
+
+
+
+
+
+
+
+
+
+
+
+
