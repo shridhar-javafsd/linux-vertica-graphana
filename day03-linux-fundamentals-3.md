@@ -342,7 +342,6 @@ source ~/.bashrc
 
 Networking basics (`ping`, `curl`, `ss`), a firewall intro with `ufw`, log inspection via `journalctl`, and a full verification pass on your WSL2 environment — including WSLg (GUI app support) — to make sure everything's rock-solid before Vertica shows up on Day 5.
 
-
 --- 
 
 ## Training Notes - 
@@ -364,3 +363,64 @@ cp /mnt/d/Projects/adaps/linux-vertica-graphana-manual/linux-stuff/acme_it_admin
 bash```
 cp /mnt/d/Projects/adaps/linux-vertica-graphana-manual/linux-stuff/acme_it_admin.sh /home/vaman/scripts/acme-lab/ 
 ```
+
+--- 
+
+CLA - script.py arg arg2 arg2 
+
+
+var1="val1"
+
+fun () {
+    var2="val2"
+    local var3="val3"
+    echo "$var1"
+    echo "$var2"
+    echo "$var3"
+}
+
+fun()
+
+echo "$var1" # yes 
+echo "$var2" # yes 
+echo "$var3" # not
+
+VAR2="VAL"
+
+cowsay "${VAR2}
+
+parent.sh 
+
+#!/bin/bash
+PLAIN_VAR="I am NOT exported"
+export EXPORTED_VAR="I AM exported"
+
+echo "Inside parent.sh, before calling child:"
+echo "  PLAIN_VAR = [$PLAIN_VAR]"
+echo "  EXPORTED_VAR = [$EXPORTED_VAR]"
+echo ""
+echo "Now calling child.sh (a separate process)..."
+echo ""
+./child.sh
+
+child.sh 
+
+#!/bin/bash
+# set -u 
+
+echo "Inside child.sh:"
+echo "  PLAIN_VAR = [$PLAIN_VAR]"
+echo "  EXPORTED_VAR = [$EXPORTED_VAR]"
+
+
+
+declare -A DEPT_MANAGER
+DEPT_MANAGER[engineering]="Arjun Mehta"
+DEPT_MANAGER[finance]="Farhan Khan"
+DEPT_MANAGER[hr]="Priya Nair"
+
+echo "${DEPT_MANAGER[engineering]}"     # Arjun Mehta
+
+for dept in "${!DEPT_MANAGER[@]}"; do   # ! gives you the KEYS
+    echo "$dept -> ${DEPT_MANAGER[$dept]}"
+done
