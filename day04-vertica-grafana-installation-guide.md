@@ -1394,7 +1394,7 @@ https://grafana.com/grafana/plugins/vertica-grafana-datasource/
 Run:
 
 ```bash
-grafana cli plugins install vertica-grafana-datasource
+sudo grafana cli plugins install vertica-grafana-datasource
 ```
 
 If your installation uses the newer command name, this may also be available:
@@ -2283,3 +2283,35 @@ https://grafana.com/grafana/plugins/vertica-grafana-datasource/
 Vertica plugin installation:
 
 https://grafana.com/grafana/plugins/vertica-grafana-datasource/installation/
+
+
+--- 
+
+## Overall Installation Picture  
+
+bash```
+┌─────────────────────────────────────────────────────────────┐
+│ Windows 11                                                   │
+│                                                               │
+│  ┌────────────┐   ┌───────────────────┐ ┌──────────────────┐│
+│  │ DBeaver    │   │ WSL2 · Ubuntu     │ │ Docker Desktop   ││
+│  │ Vertica    │   │                   │ │ (WSL2 backend)   ││
+│  │ client     │   │ ┌───────────────┐ │ │ ┌───────────────┐││
+│  │            │   │ │ Grafana :3000 │ │ │ │ Vertica CE    │││
+│  │            │   │ └───────┬───────┘ │ │ │ demo · :5433  │││
+│  └─────┬──────┘   └─────────┼─────────┘ │ └───────┬───────┘││
+│        │                    │            └─────────┼────────┘│
+│        │                    └──────────────────────┘         │
+│        └────────────────────────────────────────────┘        │
+│                             │                                 │
+│                    ┌────────▼────────┐                        │
+│                    │ Browser         │                        │
+│                    │ localhost:3000  │                        │
+│                    └────────┬────────┘                        │
+│                             │                                 │
+└─────────────────────────────┼─────────────────────────────────┘
+                              ▼
+                       ┌─────────────┐
+                       │  End user   │
+                       └─────────────┘
+```
