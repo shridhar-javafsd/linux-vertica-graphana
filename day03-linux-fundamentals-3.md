@@ -442,4 +442,15 @@ Adv java -
 
 
 
+GET 
+curl "https://jsonplaceholder.typicode.com/users/2"
+
+POST 
+
+curl "https://jsonplaceholder.typicode.com/users/2" -d "{"name" : "Sonu"}" 
+
+curl -X "https://jsonplaceholder.typicode.com/users/2" -d "{"name" : "Sonu"}" 
+
+
+
 
