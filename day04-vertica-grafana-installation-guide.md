@@ -2289,7 +2289,7 @@ https://grafana.com/grafana/plugins/vertica-grafana-datasource/installation/
 
 ## Overall Installation Picture  
 
-bash```
+```bash 
 ┌─────────────────────────────────────────────────────────────┐
 │ Windows 11                                                   │
 │                                                               │
@@ -2315,3 +2315,5 @@ bash```
                        │  End user   │
                        └─────────────┘
 ```
+
+--- 
