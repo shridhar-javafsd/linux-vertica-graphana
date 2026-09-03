@@ -79,14 +79,12 @@ DELETE FROM training.customers WHERE customer_id = 99;   -- no-op if it doesn't 
 
 -- some more inserts -- 
 
--- Customers: original 2 (Asha, Vikram/Bengaluru after UPDATE) plus 4 more
 INSERT INTO training.customers VALUES
     (3, 'Neha Verma', 'Bengaluru', '2024-01-10'),
     (4, 'Rahul Gupta', 'Hyderabad', '2024-02-05'),
     (5, 'Sonia Kapoor', 'Mumbai', '2024-03-12'),
     (6, 'Arjun Mehta', 'Bengaluru', '2024-04-01');
 
--- Products, all 5 in one statement
 INSERT INTO training.products VALUES
     (1, 'Wireless Mouse', 'Electronics', 799.00),
     (2, 'Notebook Set', 'Stationery', 149.00),
@@ -94,7 +92,6 @@ INSERT INTO training.products VALUES
     (4, 'Desk Lamp', 'Home', 599.00),
     (5, 'Backpack', 'Accessories', 1299.00);
 
--- Orders, all 9 in one statement
 INSERT INTO training.orders VALUES
     (1, 1, 1, 2, '2024-03-01'),
     (2, 2, 2, 5, '2024-03-02'),
