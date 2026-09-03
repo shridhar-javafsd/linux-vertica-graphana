@@ -166,3 +166,24 @@ JOIN training.orders AS o
 
 -- How many orders Rahul Gupta placed so far? 
 
+SELECT
+	COUNT(training.orders.order_id) AS order_count
+FROM
+	training.customers
+JOIN training.orders
+    ON
+	training.customers.customer_id = training.orders.customer_id
+WHERE
+	training.customers.name = 'Rahul Gupta';
+
+
+SELECT
+    training.customers.customer_id,
+    training.customers.name,
+    COUNT(training.orders.order_id) AS order_count
+FROM training.customers
+JOIN training.orders
+    ON training.customers.customer_id = training.orders.customer_id
+WHERE training.customers.name = 'Rahul Gupta'
+GROUP BY training.customers.customer_id, training.customers.name;
+
