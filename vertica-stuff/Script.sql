@@ -139,3 +139,5 @@ JOIN public.product_dimension p ON f.product_key = p.product_key
 GROUP BY p.category_description
 ORDER BY category_sales DESC;
 
+
+-- All orders along with the name of the customer who placed each one 
