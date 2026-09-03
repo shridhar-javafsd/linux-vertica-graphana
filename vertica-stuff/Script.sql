@@ -74,7 +74,64 @@ SELECT * FROM training.orders;
 
 INSERT INTO training.customers VALUES (1, 'Asha Rao', 'Hyderabad', '2024-01-15');
 INSERT INTO training.customers VALUES (2, 'Vikram Shah', 'Mumbai', '2024-02-20');
-
 UPDATE training.customers SET city = 'Bengaluru' WHERE customer_id = 2;
-
 DELETE FROM training.customers WHERE customer_id = 99;   -- no-op if it doesn't exist, that's fine
+
+-- some more inserts -- 
+
+-- Customers: original 2 (Asha, Vikram/Bengaluru after UPDATE) plus 4 more
+INSERT INTO training.customers VALUES
+    (3, 'Neha Verma', 'Bengaluru', '2024-01-10'),
+    (4, 'Rahul Gupta', 'Hyderabad', '2024-02-05'),
+    (5, 'Sonia Kapoor', 'Mumbai', '2024-03-12'),
+    (6, 'Arjun Mehta', 'Bengaluru', '2024-04-01');
+
+-- Products, all 5 in one statement
+INSERT INTO training.products VALUES
+    (1, 'Wireless Mouse', 'Electronics', 799.00),
+    (2, 'Notebook Set', 'Stationery', 149.00),
+    (3, 'Bluetooth Speaker', 'Electronics', 1999.00),
+    (4, 'Desk Lamp', 'Home', 599.00),
+    (5, 'Backpack', 'Accessories', 1299.00);
+
+-- Orders, all 9 in one statement
+INSERT INTO training.orders VALUES
+    (1, 1, 1, 2, '2024-03-01'),
+    (2, 2, 2, 5, '2024-03-02'),
+    (3, 2, 3, 1, '2024-03-03'),
+    (4, 3, 1, 2, '2024-03-04'),
+    (5, 3, 4, 1, '2024-03-05'),
+    (6, 6, 5, 1, '2024-03-06'),
+    (7, 4, 2, 3, '2024-03-07'),
+    (8, 1, 3, 1, '2024-03-08'),
+    (9, 5, 1, 1, '2024-03-09');
+
+SELECT * FROM training.customers; 
+SELECT * FROM training.products; 
+SELECT * FROM training.orders; 
+
+SELECT * FROM training.customers WHERE city = 'Bengaluru';
+
+SELECT c.name, o.order_id, o.quantity, p.product_name
+FROM training.orders o
+JOIN training.customers c ON o.customer_id = c.customer_id
+JOIN training.products p ON o.product_id = p.product_id;
+
+SELECT c.city, COUNT(*) AS total_orders
+FROM training.orders o
+JOIN training.customers c ON o.customer_id = c.customer_id
+GROUP BY c.city
+ORDER BY total_orders DESC;
+
+SELECT
+    COUNT(*) AS number_of_sales,
+    SUM(sales_dollar_amount) AS total_sales
+FROM store.store_sales_fact;
+
+SELECT p.category_description, SUM(f.sales_dollar_amount) AS category_sales
+FROM store.store_sales_fact f
+JOIN public.product_dimension p ON f.product_key = p.product_key
+GROUP BY p.category_description
+ORDER BY category_sales DESC;
+
+
