@@ -30,17 +30,34 @@
 -- Q1. List every table in the store and online_sales schemas,
 --     along with their schema name, using a system table query.
 
+SELECT table_schema, table_name
+FROM v_catalog.tables
+WHERE table_schema IN ('store','online_sales')
+ORDER BY 1,2;
+
 
 -- Q2. For store.store_sales_fact, list all columns with their
 --     data types and whether they allow NULLs.
 
+SELECT column_name, data_type, is_nullable FROM columns
+WHERE table_schema = 'store' AND table_name = 'store_sales_fact'
+ORDER BY ordinal_position;
+
 
 -- Q3. Identify the foreign key columns in store.store_sales_fact
 --     and note (as a comment) which dimension table each points to.
+-- date_key        -> public.date_dimension
+-- product_key + product_version -> public.product_dimension
+-- store_key       -> store.store_dimension
+-- promotion_key   -> public.promotion_dimension
+-- customer_key    -> public.customer_dimension
+-- employee_key    -> public.employee_dimension
 
 
 -- Q4. How many rows are currently in store.store_sales_fact?
 --     In online_sales.online_sales_fact?
+SELECT (SELECT COUNT(*) FROM store.store_sales_fact) AS store_rows,
+       (SELECT COUNT(*) FROM online_sales.online_sales_fact) AS online_rows;
 
 
 -- Q5. product_dimension uses a composite key (product_key +
@@ -48,6 +65,16 @@
 --     a query proving at least one product_key has more than one
 --     product_version. Explain why, in a comment.
 
+SELECT product_key, COUNT(DISTINCT product_version) AS versions
+FROM public.product_dimension
+GROUP BY product_key
+HAVING COUNT(DISTINCT product_version) > 1
+LIMIT 5;
+
+-- Products get re-versioned when their description/price/packaging
+-- changes; keeping history means old sales still join correctly to
+-- the version that was actually sold, instead of silently rewriting
+-- history to the current version.
 
 -- ============================================================
 -- SECTION B — FILTERING & PROJECTION
@@ -55,17 +82,25 @@
 
 -- Q6. List all customers from the state of 'CA' who are 'Married'.
 
+--SELECT column_name, data_type, ordinal_position FROM columns
+--WHERE table_schema = 'public' AND table_name = 'customer_dimension';
+--ORDER BY ordinal_position;
+
+SELECT customer_name  FROM public.customer_dimension where marital_status = 'Married' and customer_state = 'CA';
 
 -- Q7. List all products in the 'Diet Foods' category (check exact
 --     spelling in your data first).
 
+--select * from public.product_dimension where department_description  = 'Frozen Goods';
+--select count(*) from public.product_dimension;
+--select * from public.product_dimension;
+
+select * from public.product_dimension where diet_type is not null;
 
 -- Q8. Find all store sales transactions where sales_dollar_amount
 --     is greater than $500 in a single line.
 
-
 -- Q9. List employees whose employee_last_name starts with 'S'.
-
 
 -- Q10. Find all store sales where tender_type was 'Cash' and
 --      sales_quantity was more than 5.
@@ -489,3 +524,4 @@
 --
 --
 --
+\d training.customers;
