@@ -104,6 +104,7 @@ INSERT INTO training.orders VALUES
     (9, 5, 1, 1, '2024-03-09');
 
 SELECT * FROM training.customers; 
+SELECT * FROM training.customers; 
 SELECT * FROM training.products; 
 SELECT * FROM training.orders; 
 
@@ -141,3 +142,27 @@ ORDER BY category_sales DESC;
 
 
 -- All orders along with the name of the customer who placed each one 
+
+SELECT
+	c.customer_id,
+    c.name AS cust_name,
+    o.order_id,
+    o.order_date
+FROM training.customers AS c
+JOIN training.orders AS o
+    ON c.customer_id = c.customer_id;
+
+--SELECT
+--    training.customers.name,
+--    training.orders.order_id,
+--    training.orders.order_date
+--FROM training.customers
+--JOIN training.orders
+--    ON training.customers.customer_id = training.orders.customer_id;
+
+
+--SELECT current_schema();
+--SET search_path TO training;
+
+-- How many orders Rahul Gupta placed so far? 
+
