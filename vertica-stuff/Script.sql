@@ -109,10 +109,14 @@ SELECT * FROM training.orders;
 
 SELECT * FROM training.customers WHERE city = 'Bengaluru';
 
+-- All Orders details with customer name, quantity, and products
+
 SELECT c.name, o.order_id, o.quantity, p.product_name
 FROM training.orders o
 JOIN training.customers c ON o.customer_id = c.customer_id
 JOIN training.products p ON o.product_id = p.product_id;
+
+-- cities generating the most order volume, highest first  
 
 SELECT c.city, COUNT(*) AS total_orders
 FROM training.orders o
@@ -120,15 +124,18 @@ JOIN training.customers c ON o.customer_id = c.customer_id
 GROUP BY c.city
 ORDER BY total_orders DESC;
 
+-- Total number of sales transactions and overall revenue across all stores
+
 SELECT
     COUNT(*) AS number_of_sales,
     SUM(sales_dollar_amount) AS total_sales
 FROM store.store_sales_fact;
+
+-- Which product categories generate the most revenue, highest first
 
 SELECT p.category_description, SUM(f.sales_dollar_amount) AS category_sales
 FROM store.store_sales_fact f
 JOIN public.product_dimension p ON f.product_key = p.product_key
 GROUP BY p.category_description
 ORDER BY category_sales DESC;
-
 
