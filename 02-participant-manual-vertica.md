@@ -236,8 +236,11 @@ ON c.customer_key = s.customer_key
 GROUP BY c.customer_key
 HAVING  total_spend > avg (s.sales_dollar_amount) limit 10;
 
-
-create projection cust_spends s.customer_key, s.sales_dollar_amount FROM  store.store_sales_fact s; 
+CREATE PROJECTION cust_spends
+(customer_key, sales_dollar_amount)
+AS SELECT customer_key, sales_dollar_amount
+FROM store.store_sales_fact
+ORDER BY sales_dollar_amount;
 
 ---
 
