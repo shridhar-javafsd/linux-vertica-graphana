@@ -229,6 +229,8 @@ SELECT * FROM v_catalog.databases;
 
 --- 
 
+drop projection store.cust_spends; 
+
 profile SELECT c.customer_key, SUM(s.sales_dollar_amount) AS total_spend
 FROM public.customer_dimension c
 JOIN store.store_sales_fact s
@@ -250,7 +252,9 @@ FROM store.store_sales_fact
 ORDER BY customer_key
 SEGMENTED BY HASH(customer_key) ALL NODES;
 
+select start_refresh();
 
-drop projection store.cust_spends; 
+
 ---
+
 

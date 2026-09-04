@@ -563,8 +563,19 @@ select version();
 
 
 
+EXPLAIN SELECT c.customer_key, sum(s.sales_dollar_amount) as total_spend 
+FROM public.customer_dimension c
+JOIN store.store_sales_fact s
+ON c.customer_key = s.customer_key
+GROUP BY c.customer_key
+HAVING  total_spend > avg (s.sales_dollar_amount) limit 10;
 
-
+PROFILE SELECT c.customer_key, sum(s.sales_dollar_amount) as total_spend 
+FROM public.customer_dimension c
+JOIN store.store_sales_fact s
+ON c.customer_key = s.customer_key
+GROUP BY c.customer_key
+HAVING  total_spend > avg (s.sales_dollar_amount) limit 10;
 
 
 
