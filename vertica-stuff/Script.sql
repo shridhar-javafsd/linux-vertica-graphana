@@ -524,4 +524,21 @@ select * from public.product_dimension where diet_type is not null;
 --
 --
 --
-\d training.customers;
+--\d training.customers;
+
+
+SELECT
+    'SELECT ' ||
+    LISTAGG('"' || COLUMN_NAME || '"', ', ')
+        WITHIN GROUP (ORDER BY ORDINAL_POSITION) ||
+    ' FROM "store"."store_sales_fact";' AS query
+FROM (
+    SELECT COLUMN_NAME, ORDINAL_POSITION
+    FROM V_CATALOG.COLUMNS
+    WHERE TABLE_SCHEMA = 'store'
+      AND TABLE_NAME = 'store_sales_fact'
+    ORDER BY ORDINAL_POSITION
+    LIMIT 5
+) c;
+
+

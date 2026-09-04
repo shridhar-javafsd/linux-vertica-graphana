@@ -221,72 +221,9 @@ SELECT * FROM v_catalog.projection_columns WHERE projection_name = 'your_project
 SELECT * FROM v_catalog.views ORDER BY table_schema, table_name;
 ```
 
-8. List users
-
-```sql
-SELECT * FROM v_catalog.users ORDER BY user_name;
-```
-
-9. List roles
-
-```sql
-SELECT * FROM v_catalog.roles ORDER BY name;
-```
-
-10. List databases
+8. List databases
 
 ```sql
 SELECT * FROM v_catalog.databases;
 ```
-
-11. List catalog and monitoring objects
-
-```sql
-SELECT table_schema, table_name FROM v_catalog.tables WHERE table_schema IN ('v_catalog', 'v_monitor') ORDER BY table_schema, table_name;
-```
-
-12. Find projection-related metadata objects
-
-```sql
-SELECT table_schema, table_name FROM v_catalog.tables WHERE table_name ILIKE '%projection%' ORDER BY table_schema, table_name;
-```
-
-## Useful V_MONITOR Queries
-
-13. Query history / execution information
-
-```sql
-SELECT * FROM v_monitor.query_requests ORDER BY start_timestamp DESC;
-```
-
-14. Projection usage
-
-```sql
-SELECT * FROM v_monitor.projection_usage;
-```
-
-15. System resource usage
-
-```sql
-SELECT * FROM v_monitor.system_resource_usage;
-```
-
-16. Resource pool status
-
-```sql
-SELECT * FROM v_monitor.resource_pool_status;
-```
-
-17. Projection refresh information
-
-```sql
-SELECT * FROM v_monitor.projection_refreshes;
-```
-
-
-
-
-
-
-
 
