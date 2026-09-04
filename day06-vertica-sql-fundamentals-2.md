@@ -601,3 +601,46 @@ public.date_dimension                -- calendar/date attributes
 MySQL - SQL courseware - 
 
 https://github.com/vamzzzz/sql-stuff 
+
+--- 
+
+## Performance Optimization or Query Tuning 
+
+What were our top 5 states by total revenue for calendar year 2012? 
+
+SELECT CLEAR_CACHES();
+
+PROFILE
+SELECT c.customer_state,
+SUM(s.sales_dollar_amount) AS total_sales
+FROM store.store_sales_fact s
+JOIN customer_dimension c ON s.customer_key = c.customer_key
+JOIN date_dimension     d ON s.date_key     = d.date_key
+WHERE TO_CHAR(d.date, 'YYYY') = '2012'
+GROUP BY c.customer_state
+ORDER BY total_sales DESC
+LIMIT 5;
+
+SELECT CLEAR_CACHES();
+
+PROFILE
+SELECT c.customer_state,
+SUM(s.sales_dollar_amount) AS total_sales
+FROM store.store_sales_fact s
+JOIN customer_dimension c ON s.customer_key = c.customer_key
+JOIN date_dimension     d ON s.date_key     = d.date_key
+WHERE d.date BETWEEN '2012-01-01' AND '2012-12-31'
+GROUP BY c.customer_state
+ORDER BY total_sales DESC 
+LIMIT 5;
+
+SELECT CLEAR_CACHES();
+
+Explanation: 
+
+The original query filters on year using TO_CHAR(d.date, 'YYYY') = '2012'. Wrapping a column in a function makes the predicate non-sargable — Vertica can't apply efficient storage-level pruning and must evaluate the function row-by-row across the scan.
+
+The fix
+
+Replace the function-wrapped filter with a direct range comparison on the raw column. 
+
