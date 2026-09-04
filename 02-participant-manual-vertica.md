@@ -229,12 +229,19 @@ SELECT * FROM v_catalog.databases;
 
 --- 
 
-EXPLAIN SELECT c.customer_key, sum(s.sales_dollar_amount) as total_spend 
+SELECT c.customer_key, SUM(s.sales_dollar_amount) AS total_spend
 FROM public.customer_dimension c
 JOIN store.store_sales_fact s
-ON c.customer_key = s.customer_key
+  ON c.customer_key = s.customer_key
 GROUP BY c.customer_key
-HAVING  total_spend > avg (s.sales_dollar_amount) limit 10;
+HAVING SUM(s.sales_dollar_amount) > (
+    SELECT AVG(customer_total)
+    FROM (
+        SELECT SUM(sales_dollar_amount) AS customer_total
+        FROM store.store_sales_fact
+        GROUP BY customer_key
+    ) t
+);
 
 CREATE PROJECTION cust_spends
 (customer_key, sales_dollar_amount)
