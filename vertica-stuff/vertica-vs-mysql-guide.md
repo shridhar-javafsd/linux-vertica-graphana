@@ -465,7 +465,7 @@ HAVING  total_spend > avg (s.sales_dollar_amount) limit 10;
 
 --- query  
 
-SELECT c.customer_key, SUM(s.sales_dollar_amount) AS total_spend
+profile SELECT c.customer_key, SUM(s.sales_dollar_amount) AS total_spend
 FROM public.customer_dimension c
 JOIN store.store_sales_fact s
   ON c.customer_key = s.customer_key
@@ -478,13 +478,4 @@ HAVING SUM(s.sales_dollar_amount) > (
         GROUP BY customer_key
     ) t
 );
-
-CREATE PROJECTION cust_spends
-(customer_key, sales_dollar_amount)
-AS SELECT customer_key, sales_dollar_amount
-FROM store.store_sales_fact
-ORDER BY customer_key
-SEGMENTED BY HASH(customer_key) ALL NODES;
-
-
 
