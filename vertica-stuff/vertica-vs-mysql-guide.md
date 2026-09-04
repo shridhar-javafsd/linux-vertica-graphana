@@ -449,3 +449,19 @@ docker cp <vertica-container-name>:/tmp/date_dimension.csv mysql-vmart:/var/lib/
 Then in Section 7.1's `LOAD DATA INFILE` statements, use `/var/lib/mysql-files/<filename>.csv` as the path instead of `C:/vmart-comparison/exports/...` — MySQL's default Docker image typically whitelists this directory for `secure_file_priv` out of the box, so this usually avoids the permission issue in Section 2.4 altogether. Confirm with `SHOW VARIABLES LIKE 'secure_file_priv';` inside the container the same way as Section 2.4.
 
 **Recommendation:** stick with the native-Windows MySQL path in the main guide as the default for this training batch, since it's already installed and working. Offer this section only to trainees who want to experiment further or hit persistent `secure_file_priv` issues they can't resolve.
+
+
+--- 
+
+EXPLAIN SELECT c.customer_key, sum(s.sales_dollar_amount) as total_spend 
+FROM public.customer_dimension c
+JOIN store.store_sales_fact s
+ON c.customer_key = s.customer_key
+GROUP BY c.customer_key
+HAVING  total_spend > avg (s.sales_dollar_amount) limit 10;
+
+
+create projection cust_spends s.customer_key, s.sales_dollar_amount FROM  store.store_sales_fact s; 
+
+
+

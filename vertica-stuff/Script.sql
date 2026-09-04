@@ -30,19 +30,16 @@
 -- Q1. List every table in the store and online_sales schemas,
 --     along with their schema name, using a system table query.
 
-SELECT table_schema, table_name
-FROM v_catalog.tables
-WHERE table_schema IN ('store','online_sales')
-ORDER BY 1,2;
+SELECT table_schema, table_name FROM v_catalog.tables WHERE table_schema IN ('store','online_sales') ORDER BY 1,2;
 
+EXPLAIN SELECT table_schema, table_name FROM v_catalog.tables WHERE table_schema IN ('store','online_sales') ORDER BY 1,2;
+
+PROFILE SELECT table_schema, table_name FROM v_catalog.tables WHERE table_schema IN ('store','online_sales') ORDER BY 1,2;
 
 -- Q2. For store.store_sales_fact, list all columns with their
 --     data types and whether they allow NULLs.
 
-SELECT column_name, data_type, is_nullable FROM columns
-WHERE table_schema = 'store' AND table_name = 'store_sales_fact'
-ORDER BY ordinal_position;
-
+SELECT column_name, data_type, is_nullable FROM columns WHERE table_schema = 'store' AND table_name = 'store_sales_fact' ORDER BY ordinal_position;
 
 -- Q3. Identify the foreign key columns in store.store_sales_fact
 --     and note (as a comment) which dimension table each points to.
@@ -540,5 +537,40 @@ FROM (
     ORDER BY ORDINAL_POSITION
     LIMIT 5
 ) c;
+
+
+
+
+
+
+
+
+select version();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
