@@ -405,3 +405,47 @@ For each query, on each engine:
 7. **(15 min)** Discuss results, `EXPLAIN` plans, and the "right tool for the job" takeaway.
 
 Total: ~2.5 hours — fits as a single module within a larger Vertica or database-architecture day.
+
+---
+
+## 13. Optional: Run MySQL in Docker Too (instead of native Windows)
+
+The main guide uses native Windows MySQL because that's what's already installed. But running MySQL in Docker alongside Vertica is a reasonable alternative — worth knowing about, especially if trainees hit repeated `secure_file_priv` headaches or want an easy way to reset the environment and try again.
+
+### 13.1 Why you might do this
+
+- **No `secure_file_priv` fight** — you control the container's filesystem directly, so file paths for `LOAD DATA INFILE` are predictable and consistent for every trainee.
+- **No Docker → Windows file hop** — if both containers can share a Docker volume, you skip the `docker cp ... C:\...` step in Section 5.2 entirely.
+- **Easy reset** — `docker rm -f mysql-vmart` and re-run the container to start over with a clean database, no uninstall/reinstall.
+- **Consistency across trainee laptops** — removes "what version/config did you install" as a variable, since everyone pulls the same image.
+
+### 13.2 Why you might NOT do this
+
+- **Less fair as a performance comparison** — both databases now compete for the same Docker Desktop resource allocation (CPU/RAM cap you set in Docker's settings), whereas native MySQL gets the full host. If your goal is a clean architectural comparison, having MySQL on native Windows (full host resources) vs Vertica in a resource-capped container is arguably *more* representative of how each engine is normally deployed in production, not less. Keep this trade-off in mind rather than assuming Docker-for-both is automatically the better setup.
+- **Extra Docker Desktop resource pressure** — running two database containers at once on a trainee's laptop needs more RAM/CPU headroom than one container + one native install.
+
+### 13.3 Steps, if you go this route
+
+```bash
+docker run -d \
+  --name mysql-vmart \
+  -e MYSQL_ROOT_PASSWORD=vmartpass \
+  -e MYSQL_DATABASE=vmart \
+  -p 3306:3306 \
+  -v vmart-shared-data:/var/lib/mysql-files \
+  mysql:8.0
+```
+
+Connect from DBeaver the same way as native MySQL: host `localhost`, port `3306`, user `root`, password `vmartpass`, database `vmart`. Nothing in Sections 6, 8, 9, or 10 of this guide changes — schema creation and the query set are identical either way.
+
+**For the file transfer step (replaces Section 5.2):** instead of copying CSVs to a Windows folder, copy them into a Docker volume both containers can reach, or directly into the MySQL container:
+```bash
+docker cp <vertica-container-name>:/tmp/store_sales_fact.csv mysql-vmart:/var/lib/mysql-files/
+docker cp <vertica-container-name>:/tmp/store_dimension.csv mysql-vmart:/var/lib/mysql-files/
+docker cp <vertica-container-name>:/tmp/product_dimension.csv mysql-vmart:/var/lib/mysql-files/
+docker cp <vertica-container-name>:/tmp/customer_dimension.csv mysql-vmart:/var/lib/mysql-files/
+docker cp <vertica-container-name>:/tmp/date_dimension.csv mysql-vmart:/var/lib/mysql-files/
+```
+Then in Section 7.1's `LOAD DATA INFILE` statements, use `/var/lib/mysql-files/<filename>.csv` as the path instead of `C:/vmart-comparison/exports/...` — MySQL's default Docker image typically whitelists this directory for `secure_file_priv` out of the box, so this usually avoids the permission issue in Section 2.4 altogether. Confirm with `SHOW VARIABLES LIKE 'secure_file_priv';` inside the container the same way as Section 2.4.
+
+**Recommendation:** stick with the native-Windows MySQL path in the main guide as the default for this training batch, since it's already installed and working. Offer this section only to trainees who want to experiment further or hit persistent `secure_file_priv` issues they can't resolve.

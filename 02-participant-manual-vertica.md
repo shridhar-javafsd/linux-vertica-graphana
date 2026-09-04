@@ -163,3 +163,130 @@ That progression — **environment → fluency → production mindset** — is t
 | Why bother with `REJECTED DATA`/`EXCEPTIONS`? | One bad row shouldn't fail a million-row load — isolate and flag it instead, standard real-world ETL practice. |
 | Why does `EXPLAIN` sometimes not match what `PROFILE` shows actually happened? | The planner works off statistics about your data; stale or shifted stats mean planned vs. actual can diverge. |
 | Is any of this exactly how a real company runs Vertica? | The SQL — yes. The Docker/single-node setup — no. Production means multi-node clusters, official installers, real licensing. |
+
+---
+
+system metadata layer 
+
+star schema 
+
+columner storage 
+
+compression 
+
+--- 
+
+## Useful System Metadata Queries
+
+
+1. List schemas
+
+```sql
+SELECT * FROM v_catalog.schemata ORDER BY schema_name;
+```
+
+2. List tables
+
+```sql
+SELECT * FROM v_catalog.tables ORDER BY table_schema, table_name;
+```
+
+3. List columns
+
+```sql
+SELECT * FROM v_catalog.columns ORDER BY table_schema, table_name, ordinal_position;
+```
+
+4. List projections
+
+```sql
+SELECT * FROM v_catalog.projections ORDER BY projection_schema, projection_name;
+```
+
+5. List projections for a specific table
+
+```sql
+SELECT * FROM v_catalog.projections WHERE anchor_table_schema = 'store' AND anchor_table_name = 'store_sales_fact';
+```
+
+6. List projection columns
+
+```sql
+SELECT * FROM v_catalog.projection_columns WHERE projection_name = 'your_projection_name';
+```
+
+7. List views
+
+```sql
+SELECT * FROM v_catalog.views ORDER BY table_schema, table_name;
+```
+
+8. List users
+
+```sql
+SELECT * FROM v_catalog.users ORDER BY user_name;
+```
+
+9. List roles
+
+```sql
+SELECT * FROM v_catalog.roles ORDER BY name;
+```
+
+10. List databases
+
+```sql
+SELECT * FROM v_catalog.databases;
+```
+
+11. List catalog and monitoring objects
+
+```sql
+SELECT table_schema, table_name FROM v_catalog.tables WHERE table_schema IN ('v_catalog', 'v_monitor') ORDER BY table_schema, table_name;
+```
+
+12. Find projection-related metadata objects
+
+```sql
+SELECT table_schema, table_name FROM v_catalog.tables WHERE table_name ILIKE '%projection%' ORDER BY table_schema, table_name;
+```
+
+## Useful V_MONITOR Queries
+
+13. Query history / execution information
+
+```sql
+SELECT * FROM v_monitor.query_requests ORDER BY start_timestamp DESC;
+```
+
+14. Projection usage
+
+```sql
+SELECT * FROM v_monitor.projection_usage;
+```
+
+15. System resource usage
+
+```sql
+SELECT * FROM v_monitor.system_resource_usage;
+```
+
+16. Resource pool status
+
+```sql
+SELECT * FROM v_monitor.resource_pool_status;
+```
+
+17. Projection refresh information
+
+```sql
+SELECT * FROM v_monitor.projection_refreshes;
+```
+
+
+
+
+
+
+
+
