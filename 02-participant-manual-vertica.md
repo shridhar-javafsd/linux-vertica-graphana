@@ -240,7 +240,8 @@ CREATE PROJECTION cust_spends
 (customer_key, sales_dollar_amount)
 AS SELECT customer_key, sales_dollar_amount
 FROM store.store_sales_fact
-ORDER BY sales_dollar_amount;
+ORDER BY customer_key
+SEGMENTED BY HASH(customer_key) ALL NODES;
 
 ---
 
