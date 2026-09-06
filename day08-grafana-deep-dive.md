@@ -44,6 +44,80 @@ There's a toggle for this in every panel's query editor. Worth knowing it exists
 
 ---
 
+## 🗺️ Orientation: from Explore to an actual dashboard
+
+Quick honesty check before we go further: **everything you've done in Grafana so far is one single screen — Explore.** Today you're going to use several screens for the first time — a dashboard, a panel editor, a settings menu. This section is a slow, deliberate walkthrough of what's actually on your screen when you get there. Five minutes here saves a lot of confused clicking for the rest of the day — and once this layout clicks, everything else today is just "which button, in this same screen."
+
+### The left sidebar, properly toured
+
+You've clicked into **Explore** and **Connections → Data sources** already. Here's everything else living in that same left-hand navigation bar, so nothing today feels unfamiliar just because you haven't clicked it yet:
+
+| Sidebar item | What it's for | Have you used it yet? |
+|---|---|---|
+| **Dashboards** | Where every dashboard you build lives — also home to folders and playlists (Day 9) | Not yet — today's the day |
+| **Explore** | Ad-hoc querying, nothing gets saved | ✅ Already used, during install |
+| **Drilldown** | Newer Grafana navigation for interactively exploring metrics/logs | We won't dig into it this course — don't be surprised it's there |
+| **Connections → Data sources** | Where data source connections live | ✅ Already used — Vertica-VMart lives here |
+| **Alerting** | Alert rules, contact points, notification policies | Not yet — anatomy today, fully wired Day 9 |
+| **Administration** | Users, org settings, plugins | Briefly glanced at during install — no need to touch it today |
+
+### Building your first real dashboard, one click at a time
+
+Follow this on your own screen as you read it — don't just read it and assume you'd remember the sequence later.
+
+**1. Click "Dashboards" in the left sidebar.** You'll land on an empty (or near-empty) list. Every dashboard you ever build shows up here.
+
+**2. Click the "New" button (top-right) → "New dashboard".** You get a blank dashboard with a big **"+ Add visualization"** button in the middle. That's your empty canvas.
+
+**3. Click "+ Add visualization".** Grafana asks which data source this panel should query — pick **Vertica-VMart**, the same one from Explore.
+
+**4. You're now in the panel editor — here's the map of what you're looking at:**
+
+```
+┌───────────────────────────────────────────────┐
+│   [ chart preview ]           [ Table ▾ ]  ← visualization type picker, top-right
+│                                                 │
+├───────────────────────────────────────────────┤
+│   Query | Transform | Alert    ← tabs           │
+│   [ your SQL goes here ]                       │
+└───────────────────────────────────────────────┘
+                                      [ Panel options  ]  ← right-hand sidebar:
+                                      [ Standard options]     title, unit, thresholds,
+                                      [ Thresholds       ]     value mappings, etc. —
+                                      [ Value mappings   ]     this is "Field" from
+                                      [ ...              ]     the Concepts section below
+```
+
+This exact layout — preview + viz picker up top, Query/Transform/Alert tabs below it, an options sidebar on the right — is what every single "Field →," "Transform →," and "Panel options →" instruction for the rest of today is pointing you toward. Lock this picture in now.
+
+**5. Paste a query you already know works** — the January 2003 sales query from Explore is a safe bet:
+```sql
+SELECT store_sales_date AS time, SUM(sales_dollar_amount) AS sales
+FROM store.store_sales_fact
+WHERE $__timeFilter(store_sales_date)
+GROUP BY store_sales_date
+ORDER BY store_sales_date;
+```
+Hit **Run query** (or just pause typing for a second — Grafana often auto-runs). You should see the exact same chart you already saw in Explore — same query, same data, new screen around it.
+
+**6. Click the visualization type picker** (top-right of the preview, currently showing something like "Time series"). This opens the full list — Table, Bar chart, Pie chart, Stat, Gauge, all of it. This is the exact control every "switch this panel to X" instruction today is pointing at.
+
+**7. Click "Apply"** (top-right of the panel editor). This adds the panel to your dashboard — but doesn't save the dashboard to disk yet. Two separate steps, deliberately — it lets you build out several panels before committing anything.
+
+**8. Back on the dashboard view, click "Save dashboard"** (top-right — a disk/save icon, sometimes labeled). Give it a name — anything, e.g. `Practice Dashboard` — confirm. *Now* it's actually saved, and it'll appear under **Dashboards** every time you come back to Grafana.
+
+**9. To add a second panel later:** click **"+ Add"** at the top of an open dashboard → **"Visualization"** — same flow as step 3 onward.
+
+**10. To edit a panel you already built:** hover over it, click its title (or the three-dot menu that appears on hover), choose **Edit** — drops you straight back into the panel editor from step 4.
+
+**11. One more control you'll use constantly from here on: "Dashboard settings."** Look for a **gear ⚙️ icon** in the dashboard's top toolbar, next to Save/Share. Every "Dashboard settings → General," "→ Annotations," "→ Variables," "→ JSON Model," and "→ Versions" instruction from here through Day 9 means exactly this: click that gear, then pick the item from the list on the left of the settings screen it opens.
+
+### Why this five minutes matters
+
+Explore throws away everything the moment you leave it. A dashboard doesn't — that's the actual difference between "I ran a cool query once" and "I built something a client could open tomorrow and still see." Every remaining concept today — panel types, thresholds, transformations, variables, alerting — lives *inside* the exact screen you just toured. There's no new screen coming for the rest of Day 8. From here, it's the same map, just more rooms in it.
+
+---
+
 ## 🎛️ Panel types — the full tour
 
 You've met **Time series**, **Table**, and **Stat**. Here's the wider cast, with when each one actually earns its place on a dashboard (not just "looks cool"):
@@ -65,7 +139,7 @@ You've met **Time series**, **Table**, and **Stat**. Here's the wider cast, with
 
 ### Try it: same query, different panel types
 
-Take this query:
+Using the exact flow from the orientation above (**Dashboards → your dashboard → "+ Add" → Visualization**, or edit an existing panel), take this query:
 
 ```sql
 SELECT p.category_description, SUM(f.sales_dollar_amount) AS category_sales
@@ -75,7 +149,7 @@ GROUP BY p.category_description
 ORDER BY category_sales DESC;
 ```
 
-Build it as a **Table**, then switch the *same panel* to **Bar chart**, then to **Pie chart**, using the visualization picker at the top-right of the panel editor — no need to re-run or re-type the query each time. Notice how the bar chart makes ranking obvious at a glance, while the pie chart makes proportion obvious but ranking harder to read precisely. Neither is "wrong" — they answer slightly different questions.
+Paste it into the query editor, run it, and set the visualization picker (top-right of the panel editor — the same control from orientation step 6) to **Table**. Now, **without touching the query or re-running anything**, click that same picker again and switch to **Bar chart**, then to **Pie chart**. This is the whole point of the picker living separately from the query box: one query, three completely different pictures, zero retyping. Notice how the bar chart makes ranking obvious at a glance, while the pie chart makes proportion obvious but ranking harder to read precisely. Neither is "wrong" — they answer slightly different questions.
 
 ---
 
@@ -240,7 +314,7 @@ Same reason as before: VMart is static historical data. An alert rule needs some
 
 We're building one comprehensive dashboard together, section by section, using everything above.
 
-**1. New dashboard, name it** `VMart Sales Command Center`
+**1. New dashboard, name it** `VMart Sales Command Center` (same steps as the orientation walkthrough — Dashboards → New → New dashboard → Add visualization → pick Vertica-VMart)
 
 **2. Panel 1 — Time series (the trend):**
 ```sql

@@ -31,7 +31,7 @@ A dashboard's JSON has (roughly) this shape:
 }
 ```
 
-Why this matters practically: you can **copy this entire JSON, paste it into a text file, and hand it to a teammate** — they import it via **Dashboards → New → Import**, paste the JSON, and get an exact working copy of your dashboard, panels, variables, and all. This is also how the "Import dashboard by ID" trick works (the one you'll use for Prometheus this afternoon, if that's your track) — someone else built a dashboard, exported its JSON, published it publicly with an ID number, and you're importing that exact JSON into your own Grafana.
+Why this matters practically: you can **copy this entire JSON, paste it into a text file, and hand it to a teammate** — they import it via **Dashboards → New → Import** (📍 the same "New" button from yesterday's orientation, top-right of the Dashboards list — just pick "Import" from the dropdown instead of "New dashboard"), paste the JSON, and get an exact working copy of your dashboard, panels, variables, and all. This is also how the "Import dashboard by ID" trick works (the one you'll use for Prometheus this afternoon, if that's your track) — someone else built a dashboard, exported its JSON, published it publicly with an ID number, and you're importing that exact JSON into your own Grafana, through that same Import screen.
 
 **Try it now:** open your Day 8 dashboard's JSON Model, copy the whole thing, open a **new** dashboard, go to its JSON Model, and paste your copied JSON in, replacing what's there. Save. You've just cloned a dashboard purely through JSON — no clicking through the UI at all.
 
@@ -62,7 +62,7 @@ You won't set this up hands-on today (your data source is already configured thr
 
 #### Folders & permissions — organizing beyond "one long list of dashboards"
 
-As dashboard count grows, a flat list gets unmanageable fast. **Dashboards → New folder** lets you group related dashboards (e.g., a "Sales" folder, an "Inventory" folder). Folders also carry **permissions** — you can restrict who can view or edit dashboards within a folder, based on Grafana's role model:
+As dashboard count grows, a flat list gets unmanageable fast. On the same **Dashboards** list page from yesterday, that "New" dropdown (top-right) has more than one option — **New folder** is right there next to "New dashboard" and "Import." Pick it to group related dashboards (e.g., a "Sales" folder, an "Inventory" folder). Folders also carry **permissions** — you can restrict who can view or edit dashboards within a folder, based on Grafana's role model:
 
 | Role | Can do |
 |---|---|
@@ -74,6 +74,8 @@ As dashboard count grows, a flat list gets unmanageable fast. **Dashboards → N
 
 #### Sharing & exporting — getting a dashboard out of Grafana
 
+📍 **Where this lives:** open any dashboard, and look for a **Share icon** in the top toolbar — right next to the Save button and the gear icon you learned yesterday. Click it, and everything below shows up as tabs inside that one panel.
+
 A few different "share" mechanisms exist, each suited to a different situation:
 
 - **Share → Link** — a direct URL to the dashboard, optionally with the current time range and variable selections baked in. Best for "hey, look at this" within your own Grafana instance.
@@ -84,7 +86,7 @@ A few different "share" mechanisms exist, each suited to a different situation:
 
 #### Playlists — dashboards on autoplay
 
-**Dashboards → Playlists → New playlist**: pick a set of dashboards and an interval (e.g., 30 seconds), and Grafana will auto-cycle through them. This is *the* feature behind those big wall-mounted monitors you see in NOCs (Network Operations Centers) or open-plan offices, silently rotating through system-health dashboards all day. Purely a "nice to know it exists" feature for this course, but a fun one.
+📍 **Where this lives:** back on the **Dashboards** list page — look for a **Playlists** link near the top, close to the "New" button (some Grafana versions tuck it under a "..." menu on that same page if it's not immediately visible). **New playlist**: pick a set of dashboards and an interval (e.g., 30 seconds), and Grafana will auto-cycle through them. This is *the* feature behind those big wall-mounted monitors you see in NOCs (Network Operations Centers) or open-plan offices, silently rotating through system-health dashboards all day. Purely a "nice to know it exists" feature for this course, but a fun one.
 
 #### Query performance — Vertica-specific tips, now that you're building real dashboards
 
@@ -183,7 +185,7 @@ scrape_configs:
 
 **6. Add Prometheus as a Grafana data source:**
 
-Grafana ships with Prometheus support **built in** — no plugin install needed, unlike Vertica.
+Grafana ships with Prometheus support **built in** — no plugin install needed, unlike Vertica. This is the exact same screen and flow you used to add Vertica back during install — **Connections → Data sources** in the left sidebar (📍 the one you've already visited once before) — just search for "Prometheus" instead of "Vertica" this time:
 
 ```
 Connections → Data sources → Add data source → Prometheus
@@ -257,7 +259,9 @@ A **data link**, set under a field's options (**Field → Data links**), lets yo
 
 #### The full alerting loop — contact points, for real this time
 
-Yesterday you built an alert rule's condition but stopped short of wiring a destination. Today, actually configure a **contact point**:
+Yesterday you built an alert rule's condition but stopped short of wiring a destination. Today, actually configure a **contact point**.
+
+📍 **Where this lives:** the **Alerting** icon in the left sidebar (the bell 🔔 — flagged but not yet clicked in yesterday's orientation table). Click it, and you'll see tabs across the top for **Alert rules**, **Contact points**, and **Notification policies** — all three pieces of today's full loop live in this one section.
 
 ```
 Alerting → Contact points → Add contact point
