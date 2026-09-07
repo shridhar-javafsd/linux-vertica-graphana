@@ -76,16 +76,16 @@ Follow this on your own screen as you read it — don't just read it and assume 
 ```
 ┌───────────────────────────────────────────────┐
 │   [ chart preview ]           [ Table ▾ ]  ← visualization type picker, top-right
-│                                                 │
+│                                               │
 ├───────────────────────────────────────────────┤
-│   Query | Transform | Alert    ← tabs           │
-│   [ your SQL goes here ]                       │
+│   Query | Transform | Alert    ← tabs         │
+│   [ your SQL goes here ]                      │
 └───────────────────────────────────────────────┘
-                                      [ Panel options  ]  ← right-hand sidebar:
+                                      [ Panel options   ]  ← right-hand sidebar:
                                       [ Standard options]     title, unit, thresholds,
-                                      [ Thresholds       ]     value mappings, etc. —
-                                      [ Value mappings   ]     this is "Field" from
-                                      [ ...              ]     the Concepts section below
+                                      [ Thresholds      ]     value mappings, etc. —
+                                      [ Value mappings  ]     this is "Field" from
+                                      [ ...             ]     the Concepts section below
 ```
 
 This exact layout — preview + viz picker up top, Query/Transform/Alert tabs below it, an options sidebar on the right — is what every single "Field →," "Transform →," and "Panel options →" instruction for the rest of today is pointing you toward. Lock this picture in now.

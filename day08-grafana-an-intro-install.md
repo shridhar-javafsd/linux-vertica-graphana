@@ -198,3 +198,6 @@ ss -lntp | grep 3000
 ## 👀 Tomorrow: Day 9 — Grafana: Dashboarding
 
 You'll install the official Vertica datasource plugin, connect Grafana directly to your own running Vertica container from Days 5–7, and build a real multi-panel dashboard — graphs, tables, single-stat visualizations — all driven by live queries against VMart data. This is the day everything from the last two weeks comes together.
+
+--- 
+
