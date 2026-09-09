@@ -40,8 +40,8 @@ Uses the existing **Vertica-VMart** data source already connected in Grafana —
 Using DBeaver or `vsql`, connect to the `demo` database and run:
 
 ```sql
-CREATE TABLE demo.metrics (value INT);
-INSERT INTO demo.metrics VALUES (10);
+CREATE TABLE public.metrics (value INT);
+INSERT INTO public.metrics VALUES (10);
 ```
 
 Alternative, more realistic query if you'd rather alert on real VMart data instead of a synthetic table:
@@ -55,7 +55,7 @@ SELECT COUNT(*) FROM store.store_orders_fact WHERE order_status = 'FAILED'
 **Explore** → data source **Vertica-VMart** → run:
 
 ```sql
-SELECT value FROM demo.metrics ORDER BY 1 DESC LIMIT 1
+SELECT value FROM public.metrics ORDER BY 1 DESC LIMIT 1
 ```
 
 You should see a single row back with the current value (`10`).
@@ -81,14 +81,14 @@ Reuse or create a webhook contact point (see Section 2, step 3, for the full web
 ## 5. Trigger it — fully deterministic
 
 ```sql
-INSERT INTO demo.metrics VALUES (99);
+INSERT INTO public.metrics VALUES (99);
 ```
 
 Wait for the next evaluation cycle (up to 1 minute) and watch the **Instances** tab move **Normal → Pending → Alerting**. Check webhook.site for the firing payload.
 
 To resolve it:
 ```sql
-INSERT INTO demo.metrics VALUES (5);
+INSERT INTO public.metrics VALUES (5);
 ```
 
 ## Why this version is useful
@@ -238,8 +238,8 @@ stress-ng --cpu $(nproc) --cpu-method matrixprod --timeout 120s
 
 | Item | Vertica version | Prometheus version |
 |---|---|---|
-| Query | `SELECT value FROM demo.metrics ORDER BY 1 DESC LIMIT 1` | `100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[1m])) * 100)` |
+| Query | `SELECT value FROM public.metrics ORDER BY 1 DESC LIMIT 1` | `100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[1m])) * 100)` |
 | Threshold | `IS ABOVE 50` | `IS ABOVE 40` (or 80 for production-realistic, harder to sustain) |
-| Trigger | `INSERT INTO demo.metrics VALUES (99);` | `stress-ng --cpu $(nproc) --cpu-load 100 --timeout 120s` |
-| Resolve | `INSERT INTO demo.metrics VALUES (5);` | let `stress-ng` finish |
+| Trigger | `INSERT INTO public.metrics VALUES (99);` | `stress-ng --cpu $(nproc) --cpu-load 100 --timeout 120s` |
+| Resolve | `INSERT INTO public.metrics VALUES (5);` | let `stress-ng` finish |
 | Check core count | n/a | `nproc` |
