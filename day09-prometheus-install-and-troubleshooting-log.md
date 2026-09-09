@@ -33,6 +33,8 @@
 
 Two new binaries, both native, both running straight inside WSL2 — no Docker needed here, unlike Vertica. Why native? Because `node_exporter` needs to read your actual OS's `/proc` filesystem, and a container would need extra flags/mounts to see that cleanly. Native = simplest = correct for this specific job.
 
+> 💡 **Why node_exporter needs to exist at all:** neither Prometheus nor Grafana can read your OS's CPU/RAM/disk stats directly — nothing "just knows" that stuff by default. `node_exporter`'s entire job is reading Linux's own `/proc` and `/sys` files (the kernel's own internal counters) and republishing them as a simple web page of numbers at `:9100/metrics`. It's the translator between "raw kernel internals" and "something Prometheus can actually scrape." No exporter running = nothing for Prometheus to pull from, full stop.
+
 ---
 
 ## 🛠️ The clean install (do it this way, skip our detour)
