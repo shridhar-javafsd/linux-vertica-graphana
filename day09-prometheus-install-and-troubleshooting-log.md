@@ -7,28 +7,28 @@
 ## 🗺️ The picture, one more time
 
 ```
-┌────────────────────────────────────────────────────────────────┐
-│ Windows 11                                                     │
-│                                                                │
-│  ┌────────────┐   ┌────────────────────────────┐ ┌───────────┐ │
+┌─────────────────────────────────────────────────────────────────┐
+│ Windows 11                                                      │
+│                                                                 │
+│  ┌────────────┐   ┌─────────────────────────────┐ ┌───────────┐ │
 │  │ DBeaver    │   │ WSL2 · Ubuntu               │ │ Docker    │ │
 │  │ Vertica    │   │                             │ │ Desktop   │ │
 │  │ client     │   │ ┌───────────────┐           │ │(WSL2      │ │
-│  │            │   │ │ Grafana :3000 │◄──queries──┼─┤ backend)  │ │
+│  │            │   │ │ Grafana :3000 │◄──queries─┼─┤ backend)  │ │
 │  │            │   │ └───────┬───────┘           │ │┌─────────┐│ │
 │  │            │   │         │  ▲                │ ││Vertica  ││ │
-│  │            │   │         │  │ queries         │ ││CE demo  ││ │
-│  │            │   │  ┌──────▼──┴────┐            │ ││:5433    ││ │
-│  │            │   │  │ Prometheus   │            │ │└─────────┘│ │
-│  │            │   │  │ :9090        │            │ └───────────┘ │
-│  │            │   │  └──────▲───────┘            │               │
-│  │            │   │         │ scrapes            │               │
-│  │            │   │  ┌──────┴───────┐            │               │
-│  │            │   │  │ node_exporter│            │               │
-│  │            │   │  │ :9100        │            │               │
-│  │            │   │  └──────────────┘            │               │
+│  │            │   │         │  │ queries        │ ││CE demo  ││ │
+│  │            │   │  ┌──────▼──┴────┐           │ ││:5433    ││ │
+│  │            │   │  │ Prometheus   │           │ │└─────────┘│ │
+│  │            │   │  │ :9090        │           │ └───────────┘ │
+│  │            │   │  └──────▲───────┘           │               │
+│  │            │   │         │ scrapes           │               │
+│  │            │   │  ┌──────┴───────┐           │               │
+│  │            │   │  │ node_exporter│           │               │
+│  │            │   │  │ :9100        │           │               │
+│  │            │   │  └──────────────┘           │               │
 │  └─────┬──────┘   └─────────────────────────────┘               │
-└──────────────────────────────────────────────────────────────────┘
+└─────────────────────────────────────────────────────────────────┘
 ```
 
 Two new binaries, both native, both running straight inside WSL2 — no Docker needed here, unlike Vertica. Why native? Because `node_exporter` needs to read your actual OS's `/proc` filesystem, and a container would need extra flags/mounts to see that cleanly. Native = simplest = correct for this specific job.
