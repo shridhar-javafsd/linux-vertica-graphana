@@ -72,6 +72,16 @@ As dashboard count grows, a flat list gets unmanageable fast. On the same **Dash
 
 **Try it:** create a folder called `VMart Training`, move both your dashboards into it, then open **Folder permissions** and just look at what's configurable — no need to actually restrict anyone in this training environment.
 
+#### User management — Users, Teams, and Service accounts
+
+Yesterday's orientation flagged **Administration** in the sidebar and moved on ("no need to touch it today"). Today's the day to actually look inside it, since permissions (above) mean nothing without knowing who they're being granted to.
+
+- **Users** — individual human logins, each with an org-wide default role (Viewer/Editor/Admin), which folder/dashboard permissions can then override more specifically.
+- **Teams** — a group of users, so permissions can be granted once to "the Sales team" rather than repeated per person. This is what folder permissions were actually built to point at in a real company, not individual users one by one.
+- **Service accounts** — the one genuinely new idea here, and the most relevant if you ever touch Grafana outside the browser: a non-human identity, used when a **script or CI pipeline** needs to talk to Grafana's API (e.g., automatically provisioning a dashboard, or pulling data out programmatically) rather than a person clicking around. A service account gets an **API key/token** instead of a password — that token is what a script authenticates with.
+
+**Try it:** Administration → Users and access → Service accounts → create one, generate a token, and just look at what you're given (you don't need to actually use it anywhere today). This is genuinely the mechanism behind "provisioning" from earlier this morning working automatically without a human logging in every time.
+
 #### Sharing & exporting — getting a dashboard out of Grafana
 
 📍 **Where this lives:** open any dashboard, and look for a **Share icon** in the top toolbar — right next to the Save button and the gear icon you learned yesterday. Click it, and everything below shows up as tabs inside that one panel.
@@ -81,8 +91,17 @@ A few different "share" mechanisms exist, each suited to a different situation:
 - **Share → Link** — a direct URL to the dashboard, optionally with the current time range and variable selections baked in. Best for "hey, look at this" within your own Grafana instance.
 - **Share → Embed** — an iframe snippet, for embedding a panel inside another webpage. Requires the target page to be able to reach your Grafana instance.
 - **Share → Snapshot** — captures the *current data* as a static, shareable copy — useful for sharing a specific moment in time with someone who doesn't have Grafana access at all. ⚠️ Public snapshots are visible to anyone with the link and are hosted (by default) on Grafana's own servers if you don't have snapshot storage configured — never snapshot anything containing sensitive data without checking where it's actually being stored.
+- **Public dashboards** — a newer, different mechanism from both of the above: a live (not static) link that anyone can open **with no Grafana login at all**. Unlike a Snapshot, it stays current as the underlying data changes; unlike a regular Share Link, the viewer never needs an account. Increasingly the default way people share a dashboard outside their own company — worth knowing this exists even if you don't set one up today, since it's easy to confuse with Snapshot or Link at a glance.
 - **Export → Save dashboard JSON** — what we used above for the copy-paste trick; the "proper" long-term way to back up or hand off a dashboard definition.
 - **PDF / image export** — needs the separate Grafana Image Renderer plugin installed; not set up in this lab, but worth knowing it's how "email me a PDF of this dashboard every Monday" gets implemented in practice.
+
+#### Dashboard Links — a different, dashboard-wide cousin of Data links
+
+Don't confuse this with **Data links**, which you'll meet this afternoon if you're on Track B — that's a link tied to one specific field's *value* (click "Medical," jump somewhere filtered to Medical). This is simpler and un-tied to any data at all: **Dashboard settings → Links → New link** lets you add a small nav bar of URLs or links to other dashboards, shown at the top of the *whole* dashboard regardless of what any panel contains. Think "quick links to the three dashboards my team always jumps between" rather than anything driven by a query result.
+
+#### Tags — making dashboards findable once you have more than a handful
+
+Every dashboard has a `"tags": []` field sitting in its JSON Model that this course hasn't touched yet — **Dashboard settings → General → Tags**. Add a couple (e.g., `training`, `vmart`, `sales`) and they become filterable on the main Dashboards list page. Trivial to set up, genuinely useful the moment more than a few dashboards exist — which, by the end of today, yours will.
 
 #### Playlists — dashboards on autoplay
 
@@ -271,6 +290,8 @@ Integration: Email (or Webhook, if you'd rather not use real email)
 
 Then a **notification policy** routing your alert rule's labels to that contact point. Even without a real alert ever firing on static VMart data, walking through this full loop once — rule → label → policy → contact point — means you've genuinely seen the entire alerting pipeline end to end, not just half of it.
 
+**One more piece worth knowing about, even briefly: Silences.** Alerting → Silences → New silence lets you temporarily mute an alert (matched by its labels) without deleting the rule — the real-world use case being a planned maintenance window or a known issue you don't want paging anyone about for the next few hours. It's a genuinely common alerting task that's easy to overlook once you've built the rule → contact point → policy chain and consider alerting "done."
+
 ### 🔬 Guided practice build
 
 **Goal: a second full dashboard, built with less hand-holding than Day 8, plus a doubt-clearing pass on anything still fuzzy.**
@@ -291,6 +312,22 @@ Whichever track you were on, be ready to demo **one thing** to the whole group:
 - **Grafana Mastery track:** show your new online-sales dashboard, particularly the data link drill-down and the full alerting loop.
 
 This is a genuinely good use of the last 15–20 minutes — the freshers get a preview of what Prometheus looks like without having to build it themselves, and the experienced pair gets to explain a new concept out loud, which is one of the best ways to actually cement it.
+
+---
+
+## 🐛 Known gotchas — earned the hard way, not from a textbook
+
+These aren't theoretical. Every one of these tripped someone up on a real build during this course, and each cost real debugging time before the actual cause was found. Read them once now, and you'll recognize the symptom instantly instead of hunting blind if you hit it yourself.
+
+**"Check the Queries tab count first — every single time something looks wrong."** If a panel is behaving strangely — numbers not changing, duplicate-looking values, a chart that won't update — the very first thing to check, before touching a single setting, is the small number next to the **Queries** tab in the panel editor. More than one query sitting there, and one of them silently leftover from an earlier edit, will blend its (often stale, often unfiltered) data into everything you see. This single check resolves a surprising fraction of "nothing makes sense" moments.
+
+**Pie/Bar gauge showing one giant slice/bar instead of several — "Show" is set to "Calculate," not "All values."** Any panel expecting multiple rows (one slice per region, one bar per store) needs **Value options → Show → All values**. Left on the default "Calculate," Grafana reduces your entire multi-row result down to a single number (usually via `lastNotNull`) before it ever reaches the chart — which looks like a data problem but is actually a display setting.
+
+**A transformation "not working" is sometimes the wrong transformation for the job, not a bug.** "Add field from calculation," in Reduce row or Binary operation mode, only ever combines fields that already sit *side-by-side on the same row*. It cannot look across rows to compute something like "this row's value as a percentage of the grand total across every row" — no matter how it's configured. That specific ask needs either a SQL window function (`SUM(x) / SUM(SUM(x)) OVER ()`) or a proper three-step transformation chain (Reduce → Merge → Add field from calculation). Recognizing *which kind* of calculation you're attempting — within-row vs. across-row — before reaching for a transformation saves a lot of confused re-configuring.
+
+**A hand-typed or hand-edited variable that silently returns zero options isn't always a syntax error — sometimes it's an unverified field shape.** If a variable's dropdown shows real values when built through the UI but shows nothing (or "Selected (0)") after being edited outside it, the safest fix isn't guessing at the JSON again — it's recreating that one variable through the UI, which always produces a schema-correct result by construction.
+
+**A variable only affects the panels whose SQL actually references it.** Picking a value in a `$store` dropdown does nothing to a panel whose `WHERE` clause never mentions `$store` — that's not a bug, the query simply was never wired to that variable. Before assuming a variable is broken, open the panel's query and check whether it's even in there.
 
 ---
 
