@@ -1,4 +1,4 @@
-# Day 10 — Capstone Project (Expanded)
+# Day 10 — Capstone Project (Updated)
 
 *Thu, 10 Sep 2026*
 
@@ -41,7 +41,7 @@ employees (1) ───< ticket_history  one employee can appear as the "changed
 
 - Every **category** carries an SLA target in hours (e.g. Network issues are expected to resolve faster than a Software licensing request). A ticket **breaches SLA** if its `resolution_time_hours` exceeds its category's `sla_hours`. You'll be asked to report on this later — keep it in mind while choosing data types.
 - Every **ticket** must reference a valid category and be assigned to a team. Employee assignment is **optional until someone picks it up** — a brand-new `Open` ticket may have no assigned employee yet. Decide how that shows up in your schema and your load step.
-- **`closed_date`** and **`resolution_time_hours`** only make sense for `Closed` tickets — for `Open`/`Pending` tickets they're legitimately absent, not "unknown." You already made this call on Day 7-ish material for a simpler dataset; make it deliberately again here now that there's a second nullable field to think about.
+- **`closed_date`** and **`resolution_time_hours`** only make sense for `Closed` tickets — for `Open`/`Pending` tickets they're legitimately absent, not "unknown." You already made this call on Day 7 for a simpler dataset; make it deliberately again here now that there's a second nullable field to think about.
 - Every ticket should have **at least one history row** — when it was logged (`New → Open`), and further rows for any status change after that. This is your audit trail and it's what a couple of your join queries will lean on.
 
 ### Entities and attributes
@@ -114,6 +114,22 @@ script -a ~/adaps-capstone.txt
 # when you're completely done for the day, type: exit
 ```
 
+**Keep everything inside this one logged session — including vsql.** Don't open a fresh terminal tab for your Vertica work; run vsql right here, in the same window `script` is already capturing. `docker exec -it` just gives you an interactive terminal, and anything printed to it lands in your transcript automatically — no separate export needed:
+
+```bash
+docker exec -it vertica-ce /opt/vertica/bin/vsql -U dbadmin -d demo
+```
+
+The first thing you type inside vsql, every time you connect, should be:
+
+```sql
+\pset pager off
+```
+
+Without this, long result sets get piped through `less`, which can leave odd `--More--` prompts and screen-clear codes in your transcript instead of clean, readable output.
+
+**If you ever open a second terminal window** (e.g. to check Grafana or Prometheus while vsql is running in the first), remember that window is *not* being logged unless you also run `script` in it. Simplest habit: do all your vsql work in the one tab where `script` is already running, rather than spawning a new one.
+
 ### Start and verify the environment
 
 Nothing auto-starts (deliberately). Start it, then actually verify — don't assume.
@@ -135,7 +151,7 @@ Log the versions of everything you're using — worth having in your transcript 
 
 ```bash
 docker --version
-docker exec vertica-ce vsql -c "SELECT version();" -U dbadmin
+docker exec vertica-ce /opt/vertica/bin/vsql -U dbadmin -d demo -c "SELECT version();"
 grafana-server -v
 prometheus --version
 wsl.exe --version   # (run this one from PowerShell/CMD, not inside WSL)
@@ -144,6 +160,8 @@ wsl.exe --version   # (run this one from PowerShell/CMD, not inside WSL)
 ### Generate your dataset
 
 Unlike VMart (which came pre-loaded), today's data doesn't exist yet. Below is a ready-to-copy Python script that generates a small, related dataset across all five entities — plus a deliberately messy "batch 2" of tickets you'll use later to demo how Vertica handles bad data. Pure standard library, no internet needed.
+
+**Your dataset must be personally seeded — not the default.** Before you run the script, set `SEED_TEXT` (near the top of the file) to your own name exactly as your trainer has it on the roster, e.g. `"rahul_sharma"`. This means your tickets, your employee names, and even which rows land in your messy batch will be different from everyone else's in the room — your data is *yours*, and it's checkable as yours.
 
 ```bash
 nano ~/generate_capstone_data.py
@@ -159,6 +177,7 @@ plus a deliberately messy 'tickets_batch2' file to demo COPY exception handling.
 """
 
 import csv
+import hashlib
 import os
 from datetime import date, timedelta
 import random
@@ -166,7 +185,11 @@ import random
 OUT_DIR = os.path.expanduser("~/capstone_data")
 os.makedirs(OUT_DIR, exist_ok=True)
 
-random.seed(42)  # reproducible; change or remove if you want fresh data on re-run
+# --- PERSONALIZE THIS: your name, exactly as on the trainer's roster ---
+SEED_TEXT = "your_name_here"
+SEED = int(hashlib.md5(SEED_TEXT.encode()).hexdigest(), 16) % 100000
+random.seed(SEED)
+print(f"Seeded with '{SEED_TEXT}' -> {SEED}. Your dataset is unique to you.")
 
 # ---------- Reference data ----------
 
@@ -307,6 +330,17 @@ python3 ~/generate_capstone_data.py
 ls -la ~/capstone_data/
 ```
 
+### Get your data into the container
+
+Same reason as Day 7: `vsql` runs via `docker exec`, which means `COPY ... FROM LOCAL` looks for files **inside the container**, not on your Ubuntu host. You generated everything on the host, so it needs to go in — one `docker cp` for the whole folder this time, since you've got five CSVs plus the messy batch:
+
+```bash
+docker cp ~/capstone_data vertica-ce:/tmp/capstone_data
+docker exec vertica-ce ls -la /tmp/capstone_data
+```
+
+Every `COPY` statement from here on should point at `/tmp/capstone_data/<file>.csv` — a container path, not the `~/capstone_data/...` host path you've been using in Linux commands.
+
 ### Pre-load sanity checks (Linux, not SQL)
 
 Before loading anything, use the Linux tools you already know to sanity-check the data — this is exactly the kind of check a real data engineer does *before* trusting a `COPY` to run cleanly.
@@ -336,7 +370,13 @@ Using the entity/attribute spec above, write and run your own `CREATE SCHEMA` an
 
 ### 2. Load reference data first, then the transactional data
 
-Load `teams`, `employees`, and `categories` first (small, no dependencies) — then `tickets`, then `ticket_history`. Use `COPY ... FROM LOCAL ... DELIMITER ',' SKIP 1`, and decide deliberately how you're representing the blanks in `closed_date`, `assigned_employee_id`, and `resolution_time_hours` (Vertica's `NULL` clause vs. a placeholder value) — same decision you made on a simpler dataset earlier in the course, now with more nullable columns to think through.
+Load `teams`, `employees`, and `categories` first (small, no dependencies) — then `tickets`, then `ticket_history`. Every file lives at `/tmp/capstone_data/<file>.csv` inside the container (per the `docker cp` step above), not the host path. For example:
+
+```sql
+COPY helpdesk.teams FROM LOCAL '/tmp/capstone_data/teams.csv' DELIMITER ',' SKIP 1;
+```
+
+Repeat that pattern for the other four tables — same `/tmp/capstone_data/...` convention each time. Decide deliberately how you're representing the blanks in `closed_date`, `assigned_employee_id`, and `resolution_time_hours` (Vertica's `NULL` clause vs. a placeholder value) — same decision you made on a simpler dataset in Day 7, now with more nullable columns to think through.
 
 ### 3. Verify
 
@@ -351,17 +391,26 @@ Vertica auto-creates a super projection per table. Today you design and create *
 
 For each, write a short comment in your `.sql` file explaining which query pattern it targets and why you chose that column order. Use `EXPLAIN` on your matching queries afterward and confirm (and note in a comment) that Vertica is actually picking your projection over the super projection.
 
+**Add one query of your own that isn't in this document anywhere** — something you're personally curious about in your own (personally-seeded) data. Comment it clearly as `-- MY OWN QUERY` so it's easy to spot. This is the one part of the SQL file nobody handed you, and it's the fastest way for you (or your trainer) to tell your work apart from someone else's.
+
 ### 5. The reject/exception demo
 
-Real pipelines get messy data. Load your `tickets_batch2_messy.csv` on top of the `tickets` table using `EXCEPTIONS` and `REJECTED DATA` so Vertica writes the problem rows out instead of just failing silently or aborting the whole load:
+Real pipelines get messy data. Load your `tickets_batch2_messy.csv` on top of the `tickets` table using `EXCEPTIONS` and `REJECTED DATA` so Vertica writes the problem rows out instead of just failing silently or aborting the whole load. The input file is the container path from your `docker cp` step; the output files, same as Day 7, go straight to `/tmp/` on the container (world-writable, no permission headaches):
 
 ```sql
-COPY helpdesk.tickets FROM LOCAL '/home/<you>/capstone_data/tickets_batch2_messy.csv'
+COPY helpdesk.tickets FROM LOCAL '/tmp/capstone_data/tickets_batch2_messy.csv'
 DELIMITER ','
 SKIP 1
 NULL ''
-EXCEPTIONS  '/home/<you>/capstone_data/capstone_exceptions.txt'
-REJECTED DATA '/home/<you>/capstone_data/capstone_rejects.txt';
+EXCEPTIONS  '/tmp/capstone_exceptions.txt'
+REJECTED DATA '/tmp/capstone_rejects.txt';
+```
+
+Those two output files are written by the Vertica server, so they land inside the container too — bring them back out to your host folder before you can inspect them normally or hand them in:
+
+```bash
+docker cp vertica-ce:/tmp/capstone_exceptions.txt ~/capstone_data/capstone_exceptions.txt
+docker cp vertica-ce:/tmp/capstone_rejects.txt ~/capstone_data/capstone_rejects.txt
 ```
 
 Afterward, inspect both output files (`cat` / `less` them) and, in a comment block in your `.sql` file, explain **which rows got rejected and why** — bad date format, wrong column count, non-numeric value where a number was expected, etc. This is one of the more useful real-world skills in the whole course: knowing how to load messy data *without* losing visibility into what didn't make it in.
@@ -408,6 +457,21 @@ GROUP BY e.employee_name, tm.team_name
 ORDER BY resolutions DESC;
 ```
 
+### 7. Export your query log — your last Vertica step of the day
+
+Vertica keeps its own server-side record of every statement anyone runs against it, in `v_monitor.query_requests` — timestamped, full SQL text, independent of whether you ran it through vsql or DBeaver. As your last Vertica action today, export today's log:
+
+```bash
+docker exec vertica-ce /opt/vertica/bin/vsql -U dbadmin -d demo -c "SELECT statement_id, start_timestamp, end_timestamp, request_type, request \
+FROM v_monitor.query_requests \
+WHERE start_timestamp::date = CURRENT_DATE \
+ORDER BY start_timestamp;" > ~/capstone_data/query_requests_log.txt
+```
+
+This redirects the command's output on your Ubuntu host (`>`), so the file lands directly in `~/capstone_data/` — no `docker cp` needed this time, since the redirect happens outside the container, on the shell that invoked `docker exec`.
+
+This gives a true chronological record of your day — schema creation, loads, projections, verification queries, the reject demo, all in the order you actually ran them, written by the database itself rather than pasted into a file. Do this **after** you're done experimenting, so it captures the full day.
+
 ---
 
 ## 📊 Grafana: the dashboard
@@ -423,6 +487,10 @@ Build **one dashboard with at least 5 different panel types** pulling from your 
 - **Pie / donut** — ticket volume by category
 
 Add **at least two dashboard variables** (e.g. `assigned_team` and `category`) so the whole dashboard can be filtered without editing a single query.
+
+**Add one panel of your own** — something not listed above, showing whatever you find interesting in your own data (top category by ticket count, oldest still-open ticket, whatever). Title it starting with `My:` so it's obviously yours in the exported JSON.
+
+**Write a real comment every time you save.** Grafana's save dialog has a message field — use it, every save, with an actual description of what changed ("added SLA gauge", "fixed team variable query", "added Host Health row"), not "update" or a blank field. This builds Grafana's own dashboard version history (Dashboard settings → Version history) into a real build log with timestamps — the Grafana equivalent of your Vertica query log. Save incrementally as you build rather than once at the end; a dashboard with one version and no history looks very different from one that was actually built over the afternoon.
 
 ### Bring in the Prometheus chain, lightly
 
@@ -448,19 +516,21 @@ This is your rubric — check honestly against it before presenting. Everything 
 3. A `tar.gz` archive bundling your deliverables folder — one command, your choice of flags, but be ready to explain what it captured
 
 **Vertica**
-4. `adaps-capstone.sql` — every DDL statement, every `COPY`, both projections with their explanatory comments, and your verification/join queries, all with comments explaining *why*, not just *what*
+4. `adaps-capstone.sql` — every DDL statement, every `COPY`, both projections with their explanatory comments, your verification/join queries, and your own `-- MY OWN QUERY` addition, all with comments explaining *why*, not just *what*
 5. `capstone_exceptions.txt` and `capstone_rejects.txt` — the output of your reject/exception demo, with your own comment in the `.sql` file explaining what went wrong in each rejected row
 6. Some form of before/after row-count or `EXPLAIN` proof that your projections are actually being used (a screenshot, a pasted query result, or a comment block — your call)
+7. `query_requests_log.txt` — the exported `v_monitor.query_requests` log, run as your last Vertica step of the day
 
 **Grafana**
-7. `adaps-capstone.json` — the exported dashboard definition
-8. A screenshot (or two) of the finished, populated dashboard — the JSON alone won't show anyone what it actually looks like
-9. A one- or two-line note on which Prometheus datasource/PromQL you used for the Host Health panels
+8. `adaps-capstone.json` — the exported dashboard definition, including your `My:` panel
+9. A screenshot (or two) of the finished, populated dashboard — the JSON alone won't show anyone what it actually looks like
+10. A one- or two-line note on which Prometheus datasource/PromQL you used for the Host Health panels
+11. A screenshot of your dashboard's Version history (Dashboard settings → Version history), showing your incremental save comments
 
 **Demo**
-10. A live, working demo and explanation (see presentation guidance below)
-11. Short "decisions & trade-offs" notes — a few bullet points on your data type choices, your projection design, your NULL-handling call, and what the reject demo taught you. These double as your talking points for the presentation.
-12. *(Nice to have, not mandatory)* a one-page `adaps-capstone-summary.md` that just lists what's in your submission and where — useful for whoever's reviewing a batch of these later, and good practice for how real handoffs get documented.
+12. A live, working demo and explanation (see presentation guidance below)
+13. Short "decisions & trade-offs" notes — a few bullet points on your data type choices, your projection design, your NULL-handling call, and what the reject demo taught you. These double as your talking points for the presentation.
+14. *(Nice to have, not mandatory)* a one-page `adaps-capstone-summary.md` that just lists what's in your submission and where — useful for whoever's reviewing a batch of these later, and good practice for how real handoffs get documented.
 
 ---
 
@@ -473,6 +543,8 @@ Keep it to about 7 minutes. Cover:
 3. **One thing that broke, and how you fixed it** — everyone hits at least one snag; explaining your own debugging process out loud is a genuinely useful skill, and normalizes the fact that hitting errors is just part of the work
 
 You're not being judged on a perfect dashboard — you're being judged on whether you can reason about *why* you built it the way you did.
+
+**Be ready for a small live change.** Your trainer may ask you to make one small, unrehearsed tweak on the spot — add a filter, change a variable default, resize a column and explain the type you picked. If you built it yourself, this takes under a minute.
 
 ---
 
@@ -546,6 +618,6 @@ cat ~/capstone_data/capstone_exceptions.txt
 
 ## 🏁 Closing note
 
-Nine days ago, most of you had never opened a terminal. Today you independently designed a small relational data model from a business requirement, generated and sanity-checked your own dataset, loaded it into a real analytical database (including handling data that was deliberately broken), reasoned about projections and performance, and built a live, filterable dashboard on top of it — with a second live data source, Prometheus, feeding the same screen. That's the whole course, working end to end, unassisted, on a problem you designed the solution for yourself.
+After nine days of learning, today, you independently designed a small relational data model from a business requirement, generated and sanity-checked your own dataset, loaded it into a real analytical database (including handling data that was deliberately broken), reasoned about projections and performance, and built a live, filterable dashboard on top of it — with a second live data source, Prometheus, feeding the same screen. That's the whole course, working end to end, unassisted, on a problem you designed the solution for yourself.
 
 Well done. 🚀
